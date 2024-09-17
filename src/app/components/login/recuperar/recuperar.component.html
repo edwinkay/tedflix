@@ -1,0 +1,52 @@
+<div class="welcome-container">
+  <div class="margen">
+    <div class="overlay"></div>
+
+    <header>
+      <div routerLink="/home" class="netflix-logo">
+        <span>T</span>
+        <span>E</span>
+        <span>D</span>
+        <span>F</span>
+        <span>L</span>
+        <span>I</span>
+        <span>X</span>
+      </div>
+      <button routerLink="/login" class="sign-in-button">Iniciar Sesión</button>
+    </header>
+    <div class="container">
+      <div class="login-container">
+        <div class="login-box">
+          <h1>Inicia Sesión</h1>
+          <form>
+            <div class="input-group">
+              <ion-input
+                class="input-custom"
+                type="email"
+                fill="solid"
+                label="Correo electronico"
+                labelPlacement="floating"
+                helperText="Introduce un correo electrónico válido"
+                errorText="Correo inválido"
+                ngModel
+                email
+              ></ion-input>
+            </div>
+            <button class="login-button">Recuperar Usuario</button>
+          </form>
+          <div class="signup">
+            <p>
+              ¿Primera vez en Tedflix?
+              <a routerLink="/registrar">Suscríbete ahora</a>
+            </p>
+            <small>
+              Esta página está protegida por Google reCAPTCHA para asegurarnos
+              de que no eres un bot.
+              <a >Más información</a>.
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
