@@ -1,0 +1,7 @@
+{
+  "name": "tedflix",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
