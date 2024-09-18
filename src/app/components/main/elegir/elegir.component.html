@@ -1,0 +1,31 @@
+<div class="viewer-container">
+  <h2>¿Quién está viendo?</h2>
+  <div class="viewer-list">
+    <div class="viewer" *ngFor="let user of users; let i = index">
+      <img [src]="user.image" [alt]="user.name">
+
+      <!-- Mostrar nombre del usuario o campo de edición -->
+      <div class="viewer-info">
+        <p *ngIf="!isEditing || (isEditing && editingIndex !== i)">{{ user.name }}</p>
+        <input *ngIf="isEditing && editingIndex === i" [(ngModel)]="user.name" (blur)="finishEditing(i)" />
+
+        <!-- Iconos para editar y eliminar cuando se está administrando perfiles -->
+        <div *ngIf="isManaging">
+          <ion-icon name="pencil-outline" (click)="startEditing(i)"></ion-icon>
+          <ion-icon name="trash-outline" (click)="removeProfile(i)"></ion-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón para agregar perfil si hay menos de 4 -->
+    <div class="viewer add-profile" *ngIf="users.length < 4" (click)="onAddProfile()">
+      <div class="add-icon">+</div>
+      <p>Añadir perfil</p>
+    </div>
+  </div>
+
+  <!-- Botón para administrar perfiles -->
+  <div class="manage-profiles">
+    <a (click)="toggleManaging()">{{ isManaging ? 'Listo' : 'Administrar perfiles' }}</a>
+  </div>
+</div>
