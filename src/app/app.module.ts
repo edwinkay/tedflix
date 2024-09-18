@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
@@ -14,6 +14,7 @@ import { RegistrarComponent } from './components/login/registrar/registrar.compo
 import { RecuperarComponent } from './components/login/recuperar/recuperar.component';
 import { HomeComponent } from './components/login/home/home.component';
 import { ElegirComponent } from './components/main/elegir/elegir.component';
+import { MainComponent } from './components/main/main/main.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,6 +23,7 @@ import { ElegirComponent } from './components/main/elegir/elegir.component';
     RecuperarComponent,
     HomeComponent,
     ElegirComponent,
+    MainComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,6 +33,7 @@ import { ElegirComponent } from './components/main/elegir/elegir.component';
     IonicModule.forRoot(),
     AppRoutingModule,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })

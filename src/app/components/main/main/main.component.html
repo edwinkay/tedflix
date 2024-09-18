@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <img src="assets/logo.png" alt="Netflix Logo" class="netflix-logo" />
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="onSearch()">
+        <ion-icon name="search-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Barra de navegación -->
+  <div class="navbar">
+    <a href="#">Inicio</a>
+    <a href="#">Series</a>
+    <a href="#">Películas</a>
+    <a href="#">Novedades</a>
+    <a href="#">Mi Lista</a>
+  </div>
+</ion-header>
+
+<ion-content>
+
+  <!-- Sección del carrusel de contenido destacado -->
+  <div class="featured-content">
+    <img src="https://firebasestorage.googleapis.com/v0/b/tedflix-3dc61.appspot.com/o/movies%2Fbackdrop.jpg?alt=media&token=9e185a2d-7275-49ed-ac47-9ca737cee88c" alt="Destacado" />
+    <div class="featured-info">
+      <h2>Película Destacada</h2>
+      <p>Descripción breve de la película destacada...</p>
+      <ion-button color="danger">Ver ahora</ion-button>
+      <ion-button fill="outline">Mi lista</ion-button>
+    </div>
+  </div>
+
+  <!-- Secciones de películas (Tendencias, Nuevos lanzamientos, etc.) -->
+<div class="movie-section" *ngFor="let category of categories">
+  <h3>{{ category.name }}</h3>
+  <ion-slides [options]="slideOpts" class="movie-slider">
+    <ion-slide *ngFor="let movie of category.movies">
+      <img [src]="movie.image" [alt]="movie.title" class="movie-poster" />
+      <p>{{ movie.title }}</p>
+    </ion-slide>
+  </ion-slides>
+</div>
+
+</ion-content>
+

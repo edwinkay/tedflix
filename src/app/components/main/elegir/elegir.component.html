@@ -1,15 +1,15 @@
 <div class="viewer-container">
   <h2>¿Quién está viendo?</h2>
   <div class="viewer-list">
-    <div class="viewer" *ngFor="let user of users; let i = index">
+    <div routerLink="/browse" class="viewer" *ngFor="let user of users; let i = index">
       <img [src]="user.image" [alt]="user.name">
 
       <!-- Mostrar nombre del usuario o campo de edición -->
-      <div class="viewer-info">
+      <div  class="viewer-info">
         <p *ngIf="!isEditing || (isEditing && editingIndex !== i)">{{ user.name }}</p>
         <input *ngIf="isEditing && editingIndex === i" [(ngModel)]="user.name" (blur)="finishEditing(i)" />
 
-        <!-- Iconos para editar y eliminar cuando se está administrando perfiles -->
+
         <div *ngIf="isManaging">
           <ion-icon name="pencil-outline" (click)="startEditing(i)"></ion-icon>
           <ion-icon name="trash-outline" (click)="removeProfile(i)"></ion-icon>
