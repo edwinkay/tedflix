@@ -5,6 +5,8 @@ import { RouteReuseStrategy } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { AngularFireModule } from '@angular/fire/compat';
+
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
@@ -15,6 +17,7 @@ import { RecuperarComponent } from './components/login/recuperar/recuperar.compo
 import { HomeComponent } from './components/login/home/home.component';
 import { ElegirComponent } from './components/main/elegir/elegir.component';
 import { MainComponent } from './components/main/main/main.component';
+import { environment } from 'src/environments/environment';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,6 +34,7 @@ import { MainComponent } from './components/main/main/main.component';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     IonicModule.forRoot(),
+    AngularFireModule.initializeApp(environment.firebase),
     AppRoutingModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

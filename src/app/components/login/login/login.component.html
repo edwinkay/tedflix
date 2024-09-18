@@ -17,8 +17,10 @@
     <div class="container">
       <div class="login-container">
         <div class="login-box">
+          <h2>{{exito}}</h2>
           <h1>Inicia Sesión</h1>
-          <form>
+          <form (ngSubmit)="login()"
+      [formGroup]="loginUsuario">
             <div class="input-group">
               <ion-input
                 class="input-custom"
@@ -26,10 +28,8 @@
                 fill="solid"
                 label="Email o número de celular"
                 labelPlacement="floating"
-                helperText="Introduce un correo electrónico válido"
-                errorText="Correo inválido"
-                ngModel
-                email
+                errorText="Introduce un correo electrónico válido"
+                formControlName="email"
               ></ion-input>
             </div>
             <div class="input-group">
@@ -39,12 +39,14 @@
                 fill="solid"
                 label="Contraseña"
                 labelPlacement="floating"
-                helperText="Introduce tu contraseña"
-                ngModel
-                required
+                errorText="La contraseña debe de tener más de 6 caracteres"
+                formControlName="password"
               ></ion-input>
             </div>
-            <button routerLink="/elegir-perfil" class="login-button">Iniciar Sesión</button>
+            <div *ngIf="showError" style="font-size: 12px; text-align: center">
+              {{mensaje}}
+            </div>
+            <button type="submit" class="login-button">Iniciar Sesión</button>
             <div class="options">
               <label>
                 <input type="checkbox" />

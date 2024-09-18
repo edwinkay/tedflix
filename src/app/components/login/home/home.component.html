@@ -23,8 +23,8 @@
         </h1>
         <h2>A partir de $ 16.900. Cancela cuando quieras.</h2>
         <p>
-          ¿Quieres ver Netflix ya? Ingresa tu email para crear una cuenta o
-          reiniciar tu membresía de Netflix.
+          ¿Quieres ver Tedflix ya? Ingresa tu email para crear una cuenta o
+          reiniciar tu membresía de Tedflix.
         </p>
 
         <div class="email-form">
@@ -32,8 +32,9 @@
             type="email"
             placeholder="Email address"
             aria-label="Enter your email"
+            [(ngModel)]="correo"
           />
-          <button class="start-button">Comenzar</button>
+          <button (click)="enviar()"   class="start-button">Comenzar</button>
         </div>
       </div>
     </div>

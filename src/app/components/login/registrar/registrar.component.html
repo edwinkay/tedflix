@@ -18,7 +18,7 @@
       <div class="login-container">
         <div class="login-box">
           <h1>Registrarse</h1>
-          <form>
+          <form (ngSubmit)="registrar()" [formGroup]="registrarUsuario">
             <div class="input-group">
               <ion-input
                 class="input-custom"
@@ -26,10 +26,8 @@
                 fill="solid"
                 label="Nombre de Usuario"
                 labelPlacement="floating"
-                helperText="Introduce un usuario"
                 errorText="Usuario inválido"
-                ngModel
-                email
+                formControlName="username"
               ></ion-input>
             </div>
             <div class="input-group">
@@ -39,10 +37,8 @@
                 fill="solid"
                 label="Correo electrónico"
                 labelPlacement="floating"
-                helperText="Introduce un correo electrónico válido"
-                errorText="Correo inválido"
-                ngModel
-                email
+                errorText="Introduce un correo electrónico válido"
+                formControlName="email"
               ></ion-input>
             </div>
             <div class="input-group">
@@ -52,9 +48,8 @@
                 fill="solid"
                 label="Contraseña"
                 labelPlacement="floating"
-                helperText="Introduce tu contraseña"
-                ngModel
-                required
+                errorText="La contraseña debe de tener más de 6 caracteres"
+                formControlName="password"
               ></ion-input>
             </div>
             <div class="input-group">
@@ -64,12 +59,29 @@
                 fill="solid"
                 label="Repetir contraseña"
                 labelPlacement="floating"
-                helperText="Repite tu contraseña"
-                ngModel
-                required
+                formControlName="repetirPassword"
               ></ion-input>
+              <span
+                style="
+                  left: 1rem;
+                  position: relative;
+                  font-size: smaller;
+                  color: #e94a55;
+                "
+                *ngIf="
+                  registrarUsuario.hasError('mismatch') &&
+                  registrarUsuario.get('repetirPassword')?.touched
+                "
+                class="text-danger errorLabel"
+                >Las contraseñas no coinciden</span
+              >
             </div>
-            <button class="login-button">Registarse</button>
+
+            <div *ngIf="showError" style="font-size: 12px; text-align: center">
+              {{mensaje}}
+            </div>
+
+            <button type="submit"  class="login-button">Registrarse</button>
             <div class="options">
               <a routerLink="/recuperar">¿Olvidaste tu contraseña?</a>
             </div>

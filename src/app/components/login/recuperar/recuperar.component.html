@@ -17,8 +17,11 @@
     <div class="container">
       <div class="login-container">
         <div class="login-box">
-          <h1>Inicia Sesión</h1>
-          <form>
+          <h1>Recuperar cuenta</h1>
+          <form
+          (ngSubmit)="recuperar()"
+      [formGroup]="recuperarUsuario"
+          >
             <div class="input-group">
               <ion-input
                 class="input-custom"
@@ -26,13 +29,13 @@
                 fill="solid"
                 label="Correo electronico"
                 labelPlacement="floating"
-                helperText="Introduce un correo electrónico válido"
-                errorText="Correo inválido"
-                ngModel
-                email
+                errorText="Introduce un correo electrónico válido."
               ></ion-input>
             </div>
-            <button class="login-button">Recuperar Usuario</button>
+            <div *ngIf="showError" style="font-size: 12px; text-align: center">
+              {{mensaje}}
+            </div>
+            <button type="submit" class="login-button">Recuperar Cuenta</button>
           </form>
           <div class="signup">
             <p>
