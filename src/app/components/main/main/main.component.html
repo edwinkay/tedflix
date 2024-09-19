@@ -1,22 +1,21 @@
 <div class="mobile">
-  <ion-menu contentId="main-content">
+  <ion-menu side="end" contentId="main-content">
     <ion-header>
       <ion-toolbar>
-        <ion-title>Asomos</ion-title>
+        <div style="display: flex">
+          <ion-title>Hola! {{ seleccion?.name }}</ion-title>
+          <img
+            style="width: 42px"
+            [src]="seleccion?.image"
+            alt="Seleccionada"
+          />
+        </div>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
       <ion-list>
-        <ion-item>Informar</ion-item>
-      </ion-list>
-      <ion-list>
-        <ion-item>dfdf</ion-item>
-      </ion-list>
-      <ion-list>
-        <ion-item>Usuarios</ion-item>
-      </ion-list>
-      <ion-list>
-        <ion-item></ion-item>
+        <ion-item (click)="changeProfile()">Cambiar perfil</ion-item>
+        <ion-item (click)="cerrar()">Cerrar sesion</ion-item>
       </ion-list>
     </ion-content>
   </ion-menu>
@@ -24,29 +23,117 @@
   <div class="ion-page" id="main-content">
     <ion-header>
       <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
-        </ion-buttons>
-        <div style="display: flex">
-          <ion-avatar style="width: 45px; height: 45px"> </ion-avatar>
+        <div class="mb-nav">
+          <div class="logo-mobile">T</div>
+          <div class="navbar">
+            <a>Inicio</a>
+            <a class="hide">Series</a>
+            <a>Películas</a>
+            <a class="hide">Novedades</a>
+            <a>Mi Lista</a>
+          </div>
+          <ion-buttons slot="end">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
         </div>
       </ion-toolbar>
     </ion-header>
 
     <ion-content>
-      <input type="text" />
+      <div class="margen">
+        <div class="overlay"></div>
+
+        <ion-menu side="end" contentId="main-content" #menu>
+          <ion-header>
+            <ion-toolbar>
+              <ion-title>Hola! {{ seleccion?.name }}</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding">
+            <ion-list style="cursor: pointer" (click)="changeProfile()"
+              >Cambiar de perfil</ion-list
+            >
+            <ion-list style="cursor: pointer" (click)="cerrar()"
+              >Cerrar sesion</ion-list
+            >
+          </ion-content>
+        </ion-menu>
+
+        <div class="container" id="main-content">
+          <!-- Sección del carrusel de contenido destacado -->
+          <div *ngIf="!busqueda" class="featured-content">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/tedflix-3dc61.appspot.com/o/movies%2Fbackdrop.jpg?alt=media&token=9e185a2d-7275-49ed-ac47-9ca737cee88c"
+              alt="Destacado"
+            />
+            <div class="featured-info">
+              <h2>Película Destacada</h2>
+              <p>Descripción breve de la película destacada...</p>
+              <ion-button color="danger">Ver ahora</ion-button>
+              <ion-button fill="outline">Mi lista</ion-button>
+            </div>
+          </div>
+
+          <!-- Secciones de películas (Tendencias, Nuevos lanzamientos, etc.) -->
+          <div
+            style="width: -webkit-fill-available"
+            *ngFor="let category of categorias"
+          >
+            <div *ngFor="let key of getKeys(category.categorias)">
+              <h3>{{ key }}</h3>
+              <div class="carousel-container">
+                <button
+                  (click)="prevSlide(category, key)"
+                  class="carousel-button carousel-button-prev"
+                >
+                  &#10094;
+                </button>
+
+                <div class="carousel-wrapper">
+                  <div
+                    class="carousel-images"
+                    [style.transform]="getTransform(category, key)"
+                  >
+                    <!-- Modifica para usar filteredMovies -->
+                    <div
+                      *ngFor="let movie of getVisibleMovies(category, key)"
+                      class="carousel-item"
+                    >
+                      <img
+                        style="cursor: pointer"
+                        [src]="movie.image"
+                        [alt]="movie.title"
+                        class="movie-poster"
+                        (click)="openMovieSynopsis(movie)"
+                      />
+                      <p>{{ movie.title }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  (click)="nextSlide(category, key)"
+                  class="carousel-button carousel-button-next"
+                >
+                  &#10095;
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </ion-content>
+
     <ion-tab-bar slot="bottom">
       <ion-tab-button>
-        <ion-icon name="grid-outline"></ion-icon>
-        <ion-label>Features</ion-label>
+        <ion-icon name="home-outline"></ion-icon>
+        <ion-label>Inicio</ion-label>
       </ion-tab-button>
 
       <ion-tab-button>
-        <ion-icon name="people-outline"></ion-icon>
-        <ion-label>Grupos</ion-label>
+        <ion-icon name="search-outline"></ion-icon>
+        <ion-label>Busqueda</ion-label>
       </ion-tab-button>
-
       <ion-tab-button>
         <ion-icon name="person-circle-outline"></ion-icon>
         <ion-label>Perfil</ion-label>
@@ -60,7 +147,6 @@
     <div class="overlay"></div>
 
     <header>
-      <div class="logo-mobile">T</div>
       <div class="netflix-logo">
         <span>T</span>
         <span>E</span>
@@ -71,11 +157,11 @@
         <span>X</span>
       </div>
       <div class="navbar">
-        <a >Inicio</a>
-        <a class="hide" >Series</a>
-        <a >Películas</a>
-        <a class="hide" >Novedades</a>
-        <a >Mi Lista</a>
+        <a>Inicio</a>
+        <a class="hide">Series</a>
+        <a>Películas</a>
+        <a class="hide">Novedades</a>
+        <a>Mi Lista</a>
       </div>
       <div>
         <ion-buttons slot="end">
@@ -93,7 +179,7 @@
           <ion-button (click)="openMenu()">
             <img
               style="width: 82px"
-              [src]="seleccion.image"
+              [src]="seleccion?.image"
               alt="Seleccionada"
             />
           </ion-button>
@@ -104,7 +190,7 @@
     <ion-menu side="end" contentId="main-content" #menu>
       <ion-header>
         <ion-toolbar>
-          <ion-title>Hola! {{ seleccion.name }}</ion-title>
+          <ion-title>Hola! {{ seleccion?.name }}</ion-title>
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
@@ -117,7 +203,7 @@
       </ion-content>
     </ion-menu>
 
-    <div  class="container" id="main-content">
+    <div class="container" id="main-content">
       <!-- Sección del carrusel de contenido destacado -->
       <div *ngIf="!busqueda" class="featured-content">
         <img
@@ -176,7 +262,5 @@
         </div>
       </div>
     </div>
-
   </div>
-
 </div>

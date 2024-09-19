@@ -116,7 +116,52 @@ ion-icon:hover {
   color: #141414;
 }
 
-
+@media screen and (max-width: 600px){
+  .welcome-container {
+    display: none;
+  }
+  .viewer-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+.netflix-logo {
+    display: none;
+}
+.logo-mobile {
+  display: block;
+    font-weight: bold;
+    color: #e50914;
+    font-size: 3rem;
+    position: relative;
+    bottom: 9px;
+}
+.hide {
+  display: none;
+}
+.notification{
+  display: none;
+}
+header {
+    background-color: rgba(0, 0, 0, 0.2588235294);
+    cursor: pointer;
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 10px;
+    z-index: 2;
+    width: -webkit-fill-available;
+}
+.navbar {
+    width: 100%;
+    display: flex;
+    padding: 10px;
+    gap: 2rem;
+    align-items: flex-start;
+}
+.mobile {
+  display: block;
+}
+}
 
 
 

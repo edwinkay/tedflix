@@ -52,7 +52,6 @@ export class MainComponent implements OnInit {
   ngOnInit() {
     this._dataPerfil.seleccion$.subscribe((data) => {
       this.seleccion = data;
-      console.log('Datos recibidos del padre:', this.seleccion);
       this.loadMovies();
     });
   }
