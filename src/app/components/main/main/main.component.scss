@@ -1,21 +1,32 @@
 .netflix-logo {
   height: 30px;
 }
+header{
+  display: flex;
+    gap: 3rem;
+}
+.background{
+  background-color: #e50914;
+}
 
 .navbar {
-  display: flex;
-  justify-content: space-around;
-  background-color: #141414;
-  padding: 10px;
-  position: sticky;
-  top: 0;
-  z-index: 1;
+  width: 100%;
+    display: flex;
+    padding: 10px;
+    gap: 2rem;
 
   a {
     color: white;
     font-weight: bold;
     text-decoration: none;
   }
+}
+.netflix-logo {
+  font-size: 40px;
+  font-family: monospace;
+  color: #e50914;
+  font-weight: 600;
+  margin-left: 1rem;
 }
 
 .featured-content {
