@@ -156,3 +156,21 @@ ion-input {
   color: #8c8c8c;
   line-height: 1.5;
 }
+@media screen and (max-width: 600px) {
+  .netflix-logo {
+    font-size: 30px;
+    font-family: monospace;
+    color: #e50914;
+    font-weight: 600;
+}
+
+header {
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 35px;
+    z-index: 2;
+}
+}

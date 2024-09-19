@@ -1,9 +1,7 @@
 <div class="welcome-container">
   <div class="margen">
-    <div class="overlay"></div>
-
     <header>
-      <div class="netflix-logo">
+      <div class="tedflix-logo">
         <span>T</span>
         <span>E</span>
         <span>D</span>
@@ -12,7 +10,7 @@
         <span>I</span>
         <span>X</span>
       </div>
-      <button routerLink="/login" class="sign-in-button">Iniciar Sesión</button>
+      <ion-button routerLink="/login" class="sign-in-button" expand="block" color="danger">Iniciar Sesión</ion-button>
     </header>
     <div class="container">
       <div class="welcome-content">
@@ -30,11 +28,11 @@
         <div class="email-form">
           <input
             type="email"
-            placeholder="Email address"
+            placeholder="Ingresa tu correo"
             aria-label="Enter your email"
             [(ngModel)]="correo"
           />
-          <button (click)="enviar()"   class="start-button">Comenzar</button>
+          <ion-button (click)="enviar()" expand="block" color="danger" class="start-button">Comenzar</ion-button>
         </div>
       </div>
     </div>

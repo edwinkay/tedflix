@@ -6,6 +6,7 @@ import { RecuperarComponent } from './components/login/recuperar/recuperar.compo
 import { RegistrarComponent } from './components/login/registrar/registrar.component';
 import { ElegirComponent } from './components/main/elegir/elegir.component';
 import { MainComponent } from './components/main/main/main.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -13,8 +14,10 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'recuperar', component: RecuperarComponent },
   { path: 'registrar', component:  RegistrarComponent},
-  { path: 'browse', component:  ElegirComponent},
-  { path: 'browse2', component:  MainComponent},
+  { path: 'browse', component:  ElegirComponent,
+    canActivate: [AuthGuard],},
+  { path: 'browse2', component:  MainComponent,
+    canActivate: [AuthGuard],},
 ];
 
 @NgModule({
