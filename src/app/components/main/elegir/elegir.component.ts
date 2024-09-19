@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Router } from '@angular/router';
+import { MenuController } from '@ionic/angular';
 import { MoviesService } from 'src/app/services/movies.service';
 import { UsersService } from 'src/app/services/users.service';
 
@@ -9,6 +11,7 @@ import { UsersService } from 'src/app/services/users.service';
   styleUrls: ['./elegir.component.scss'],
 })
 export class ElegirComponent implements OnInit {
+  @ViewChild('menu') menu: any;
   images = [
     'https://i.pinimg.com/564x/3c/e6/72/3ce67241681dc17a8be9632f14728cf9.jpg',
     'https://i.pinimg.com/564x/c6/99/31/c699318ead25a55a908e0cd2f1c2a5f7.jpg',
@@ -25,19 +28,25 @@ export class ElegirComponent implements OnInit {
   uid: any;
   idUser: any;
   comprobar = false;
+
+  selectedMovie: any;
   private userVerified = false;
 
   ocultar = true;
   slideOpts: any;
 
+  seleccion: any;
+
   private currentIndexes: { [key: string]: number } = {};
   private visibleCount: { [key: string]: number } = {};
-  private loadIncrement = 4;
+  private loadIncrement = 8;
 
   constructor(
     private afAuth: AngularFireAuth,
     private _user: UsersService,
-    private _movies: MoviesService
+    private _movies: MoviesService,
+    private menuCtrl: MenuController,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +61,6 @@ export class ElegirComponent implements OnInit {
   loadMovies() {
     this._movies.getMovies().subscribe((mov) => {
       this.categorias = mov;
-      console.log(mov);
     });
   }
   getKeys(obj: any): string[] {
@@ -112,8 +120,19 @@ export class ElegirComponent implements OnInit {
     });
   }
 
-  hide() {
+  hide(obj: any) {
+    this.seleccion = obj;
     this.ocultar = false;
+  }
+  changeProfile() {
+    this.ocultar = true;
+  }
+
+  async cerrar() {
+    await this.menu.close(); // Cerrar el menú
+    this.afAuth.signOut().then(() => {
+      this.router.navigate(['/login']);
+    });
   }
 
   verificar() {
@@ -226,5 +245,9 @@ export class ElegirComponent implements OnInit {
       .catch((error) => {
         console.error('Error al eliminar el perfil:', error);
       });
+  }
+
+  openMenu() {
+    this.menuCtrl.open('end');
   }
 }

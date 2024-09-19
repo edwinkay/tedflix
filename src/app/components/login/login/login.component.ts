@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
     this.afAuth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        this.router.navigate(['/elegir-perfil']);
+        this.router.navigate(['/browse']);
       })
       .catch((error) => {
         this.mensaje = this.firebaseError.errorFirebase(error.code);
