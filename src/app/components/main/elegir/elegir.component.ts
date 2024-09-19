@@ -35,6 +35,10 @@ export class ElegirComponent implements OnInit {
 
   ocultar = true;
   slideOpts: any;
+  busqueda = false;
+
+  searchTerm: string = '';
+  filteredMovies: any[] = [];
 
   seleccion: any;
 
@@ -60,6 +64,30 @@ export class ElegirComponent implements OnInit {
       }
     });
   }
+  scan() {
+    this.busqueda = !this.busqueda;
+  }
+  searchMovies(event: any) {
+    const searchTerm = event.detail.value.toLowerCase();
+    this.filteredMovies = this.categorias.map((category: any) => {
+      return {
+        ...category,
+        categorias: Object.keys(category.categorias).reduce(
+          (acc: any, key: string) => {
+            acc[key] = {
+              ...category.categorias[key],
+              movies: category.categorias[key].movies.filter((movie: any) =>
+                movie.title.toLowerCase().includes(searchTerm)
+              ),
+            };
+            return acc;
+          },
+          {}
+        ),
+      };
+    });
+  }
+
   loadMovies() {
     this._movies.getMovies().subscribe((mov) => {
       this.categorias = mov;
@@ -96,7 +124,11 @@ export class ElegirComponent implements OnInit {
   }
 
   getVisibleMovies(category: any, key: string): any[] {
-    const movies = category.categorias[key].movies;
+    const movies = this.filteredMovies.length
+      ? this.filteredMovies.find((cat) => cat.id === category.id)?.categorias[
+          key
+        ]?.movies || []
+      : category.categorias[key].movies;
     const count = this.visibleCount[`${category.id}-${key}`] || 8; // Mostrar inicialmente
     return movies.slice(0, count);
   }
