@@ -1,3 +1,5 @@
+
+
 <div class="viewer-container" *ngIf="ocultar">
   <h2>¿Quién está viendo?</h2>
   <div class="viewer-list">
@@ -53,6 +55,7 @@
     <div class="overlay"></div>
 
     <header>
+      <div class="logo-mobile">T</div>
       <div class="netflix-logo">
         <span>T</span>
         <span>E</span>
@@ -63,11 +66,11 @@
         <span>X</span>
       </div>
       <div class="navbar">
-        <a href="#">Inicio</a>
-        <a href="#">Series</a>
-        <a href="#">Películas</a>
-        <a href="#">Novedades</a>
-        <a href="#">Mi Lista</a>
+        <a >Inicio</a>
+        <a class="hide" >Series</a>
+        <a >Películas</a>
+        <a class="hide" >Novedades</a>
+        <a >Mi Lista</a>
       </div>
       <div>
         <ion-buttons slot="end">
@@ -79,7 +82,7 @@
           <ion-button (click)="scan()">
             <ion-icon name="search-outline"></ion-icon>
           </ion-button>
-          <ion-button>
+          <ion-button class="notification">
             <ion-icon name="notifications-outline"></ion-icon>
           </ion-button>
           <ion-button (click)="openMenu()">
@@ -168,5 +171,7 @@
         </div>
       </div>
     </div>
+
   </div>
+
 </div>
