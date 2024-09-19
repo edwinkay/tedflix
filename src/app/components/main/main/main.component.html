@@ -36,6 +36,11 @@
             <ion-menu-button></ion-menu-button>
           </ion-buttons>
         </div>
+        <ion-searchbar
+            *ngIf="busqueda"
+            [(ngModel)]="searchTerm"
+            (ionInput)="searchMovies($event)"
+          ></ion-searchbar>
       </ion-toolbar>
     </ion-header>
 
@@ -132,7 +137,7 @@
 
       <ion-tab-button>
         <ion-icon name="search-outline"></ion-icon>
-        <ion-label>Busqueda</ion-label>
+        <ion-label (click)="scan()">Busqueda</ion-label>
       </ion-tab-button>
       <ion-tab-button>
         <ion-icon name="person-circle-outline"></ion-icon>
