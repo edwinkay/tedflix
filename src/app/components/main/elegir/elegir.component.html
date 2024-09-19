@@ -1,11 +1,9 @@
-
-
 <div class="viewer-container" *ngIf="ocultar">
   <h2>¿Quién está viendo?</h2>
   <div class="viewer-list">
     <div style="display: contents" *ngFor="let user of users; let i = index">
       <div class="viewer" *ngFor="let perfil of user.perfil; let j = index">
-        <img (click)="hide(perfil)" [src]="perfil.image" [alt]="perfil.name" />
+        <img (click)="main(perfil)" [src]="perfil.image" [alt]="perfil.name" />
         <div class="viewer-info">
           <p *ngIf="!isEditing || (isEditing && editingIndex !== j)">
             {{ perfil.name }}
@@ -50,128 +48,4 @@
   </div>
 </div>
 
-<div *ngIf="!ocultar" class="welcome-container">
-  <div class="margen">
-    <div class="overlay"></div>
 
-    <header>
-      <div class="logo-mobile">T</div>
-      <div class="netflix-logo">
-        <span>T</span>
-        <span>E</span>
-        <span>D</span>
-        <span>F</span>
-        <span>L</span>
-        <span>I</span>
-        <span>X</span>
-      </div>
-      <div class="navbar">
-        <a >Inicio</a>
-        <a class="hide" >Series</a>
-        <a >Películas</a>
-        <a class="hide" >Novedades</a>
-        <a >Mi Lista</a>
-      </div>
-      <div>
-        <ion-buttons slot="end">
-          <ion-searchbar
-            *ngIf="busqueda"
-            [(ngModel)]="searchTerm"
-            (ionInput)="searchMovies($event)"
-          ></ion-searchbar>
-          <ion-button (click)="scan()">
-            <ion-icon name="search-outline"></ion-icon>
-          </ion-button>
-          <ion-button class="notification">
-            <ion-icon name="notifications-outline"></ion-icon>
-          </ion-button>
-          <ion-button (click)="openMenu()">
-            <img
-              style="width: 82px"
-              [src]="seleccion.image"
-              alt="Seleccionada"
-            />
-          </ion-button>
-        </ion-buttons>
-      </div>
-    </header>
-
-    <ion-menu side="end" contentId="main-content" #menu>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Hola! {{ seleccion.name }}</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <ion-list style="cursor: pointer" (click)="changeProfile()"
-          >Cambiar de perfil</ion-list
-        >
-        <ion-list style="cursor: pointer" (click)="cerrar()"
-          >Cerrar sesion</ion-list
-        >
-      </ion-content>
-    </ion-menu>
-
-    <div  class="container" id="main-content">
-      <!-- Sección del carrusel de contenido destacado -->
-      <div *ngIf="!busqueda" class="featured-content">
-        <img
-          src="https://firebasestorage.googleapis.com/v0/b/tedflix-3dc61.appspot.com/o/movies%2Fbackdrop.jpg?alt=media&token=9e185a2d-7275-49ed-ac47-9ca737cee88c"
-          alt="Destacado"
-        />
-        <div class="featured-info">
-          <h2>Película Destacada</h2>
-          <p>Descripción breve de la película destacada...</p>
-          <ion-button color="danger">Ver ahora</ion-button>
-          <ion-button fill="outline">Mi lista</ion-button>
-        </div>
-      </div>
-
-      <!-- Secciones de películas (Tendencias, Nuevos lanzamientos, etc.) -->
-      <div *ngFor="let category of categorias">
-        <div *ngFor="let key of getKeys(category.categorias)">
-          <h3>{{ key }}</h3>
-          <div class="carousel-container">
-            <button
-              (click)="prevSlide(category, key)"
-              class="carousel-button carousel-button-prev"
-            >
-              &#10094;
-            </button>
-
-            <div class="carousel-wrapper">
-              <div
-                class="carousel-images"
-                [style.transform]="getTransform(category, key)"
-              >
-                <!-- Modifica para usar filteredMovies -->
-                <div
-                  *ngFor="let movie of getVisibleMovies(category, key)"
-                  class="carousel-item"
-                >
-                  <img
-                    style="cursor: pointer"
-                    [src]="movie.image"
-                    [alt]="movie.title"
-                    class="movie-poster"
-                    (click)="openMovieSynopsis(movie)"
-                  />
-                  <p>{{ movie.title }}</p>
-                </div>
-              </div>
-            </div>
-
-            <button
-              (click)="nextSlide(category, key)"
-              class="carousel-button carousel-button-next"
-            >
-              &#10095;
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-</div>
