@@ -9,61 +9,11 @@ import { UsersService } from 'src/app/services/users.service';
   styleUrls: ['./elegir.component.scss'],
 })
 export class ElegirComponent implements OnInit {
-
-
   images = [
     'https://i.pinimg.com/564x/3c/e6/72/3ce67241681dc17a8be9632f14728cf9.jpg',
     'https://i.pinimg.com/564x/c6/99/31/c699318ead25a55a908e0cd2f1c2a5f7.jpg',
     'https://i.pinimg.com/originals/89/51/35/89513597910ab6ce4285402ab7c0e591.jpg',
     'https://i.pinimg.com/564x/61/54/76/61547625e01d8daf941aae3ffb37f653.jpg',
-  ];
-
-  categoriesx = [
-    {
-      name: 'Tendencias',
-      movies: [
-        {
-          title: 'Película 1',
-          image:
-            'https://firebasestorage.googleapis.com/v0/b/tedflix-3dc61.appspot.com/o/movies%2F1.png?alt=media&token=0aeb22a2-87ad-4f13-8638-e834d9e410dc',
-        },
-        {
-          title: 'Película 2',
-          image:
-            'https://firebasestorage.googleapis.com/v0/b/tedflix-3dc61.appspot.com/o/movies%2F2.png?alt=media&token=f5eb7b71-c94a-487c-901c-888fc8173286',
-        },
-        {
-          title: 'Película 3',
-          image:
-            'https://firebasestorage.googleapis.com/v0/b/tedflix-3dc61.appspot.com/o/movies%2F3.png?alt=media&token=13917858-396d-4be4-b3e5-a2073c16d1b1',
-        },
-        {
-          title: 'Película 4',
-          image:
-            'https://firebasestorage.googleapis.com/v0/b/tedflix-3dc61.appspot.com/o/movies%2F4.png?alt=media&token=219947e8-2bb2-4d25-baff-4e531eb42e0a',
-        },
-      ],
-    },
-    {
-      name: 'Nuevos lanzamientos',
-      movies: [
-        {
-          title: 'Película 5',
-          image:
-            'https://firebasestorage.googleapis.com/v0/b/tedflix-3dc61.appspot.com/o/movies%2F5.png?alt=media&token=f5bb2e66-dc4a-4920-b445-814b393a76ee',
-        },
-        {
-          title: 'Película 6',
-          image:
-            'https://firebasestorage.googleapis.com/v0/b/tedflix-3dc61.appspot.com/o/movies%2F6.png?alt=media&token=3779bb8b-100c-46d9-8279-5a26fff03601',
-        },
-        {
-          title: 'Película 7',
-          image:
-            'https://firebasestorage.googleapis.com/v0/b/tedflix-3dc61.appspot.com/o/movies%2F7.png?alt=media&token=55dc46e5-641a-4ebc-9c7a-3e66b72a98da',
-        },
-      ],
-    },
   ];
 
   users: any[] = [];
@@ -79,6 +29,8 @@ export class ElegirComponent implements OnInit {
 
   ocultar = true;
   slideOpts: any;
+
+  private currentIndexes: { [key: string]: number } = {};
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -103,6 +55,29 @@ export class ElegirComponent implements OnInit {
   }
   getKeys(obj: any): string[] {
     return Object.keys(obj);
+  }
+
+  getTransform(category: any, key: string): string {
+    const currentIndex = this.currentIndexes[`${category.id}-${key}`] || 0;
+    return `translateX(-${currentIndex * 100}%)`;
+  }
+
+  prevSlide(category: any, key: string) {
+    const indexKey = `${category.id}-${key}`;
+    const categoryMovies = category.categorias[key].movies.length;
+    this.currentIndexes[indexKey] =
+      this.currentIndexes[indexKey] > 0
+        ? this.currentIndexes[indexKey] - 1
+        : categoryMovies - 1;
+  }
+
+  nextSlide(category: any, key: string) {
+    const indexKey = `${category.id}-${key}`;
+    const categoryMovies = category.categorias[key].movies.length;
+    this.currentIndexes[indexKey] =
+      this.currentIndexes[indexKey] < categoryMovies - 1
+        ? this.currentIndexes[indexKey] + 1
+        : 0;
   }
 
   loadUsers() {

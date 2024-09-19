@@ -119,7 +119,8 @@ ion-icon:hover {
 
 ///nuevo codigo
 .welcome-container {
-  overflow: auto;
+  overflow-x: hidden;
+    overflow-y: auto;
   position: relative;
   height: 100vh;
   background: url("https://assets.nflxext.com/ffe/siteui/vlv3/85ff76db-39e5-423a-afbc-97d3e74db71b/null/CO-es-20240909-TRIFECTA-perspective_071d8885-7af4-4c69-8cf0-02adec798a23_large.jpg")
@@ -198,26 +199,54 @@ header {
     text-decoration: none;
   }
 }
-.movie-section {
-  margin-top: 20px;
-
-  h3 {
-    color: white;
-    margin-left: 15px;
-  }
-
-  .movie-slider {
-    padding-left: 10px;
-  }
-
-  .movie-poster {
-    width: 100px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-  }
+.carousel-container {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
-ion-slides.movie-slider {
-    display: flex;
-    gap: 5px;
+
+.carousel-wrapper {
+  display: flex;
+  overflow: hidden;
 }
+
+.carousel-images {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.carousel-item {
+  flex: 0 0 100%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.movie-poster {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.carousel-button-prev {
+  left: 10px;
+}
+
+.carousel-button-next {
+  right: 10px;
+}
+
+
+

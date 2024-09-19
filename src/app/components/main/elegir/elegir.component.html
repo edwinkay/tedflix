@@ -83,16 +83,26 @@
 
       <!-- Secciones de películas (Tendencias, Nuevos lanzamientos, etc.) -->
       <div *ngFor="let category of categorias">
-        <div *ngFor="let key of getKeys(category.categorias)">
-          <h3>{{ key }}</h3>
-          <ion-slides [options]="slideOpts" class="movie-slider">
-            <ion-slide *ngFor="let movie of category.categorias[key].movies">
-              <img [src]="movie.image" [alt]="movie.title" class="movie-poster" />
+    <div *ngFor="let key of getKeys(category.categorias)">
+      <h3>{{ key }}</h3>
+      <div class="carousel-container">
+        <button (click)="prevSlide(category, key)" class="carousel-button carousel-button-prev">&#10094;</button>
+
+        <div class="carousel-wrapper">
+          <div class="carousel-images" [style.transform]="getTransform(category, key)">
+            <div *ngFor="let movie of category.categorias[key].movies" class="carousel-item">
+              <img [src]="movie.image" [alt]="movie.title" class="movie-poster"/>
               <p>{{ movie.title }}</p>
-            </ion-slide>
-          </ion-slides>
+            </div>
+          </div>
         </div>
+
+        <button (click)="nextSlide(category, key)" class="carousel-button carousel-button-next">&#10095;</button>
       </div>
     </div>
   </div>
+    </div>
+  </div>
 </div>
+
+
