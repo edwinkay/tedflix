@@ -31,6 +31,8 @@ export class ElegirComponent implements OnInit {
   slideOpts: any;
 
   private currentIndexes: { [key: string]: number } = {};
+  private visibleCount: { [key: string]: number } = {};
+  private loadIncrement = 4;
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -64,20 +66,40 @@ export class ElegirComponent implements OnInit {
 
   prevSlide(category: any, key: string) {
     const indexKey = `${category.id}-${key}`;
-    const categoryMovies = category.categorias[key].movies.length;
+    const visibleMovies = this.getVisibleMovies(category, key);
     this.currentIndexes[indexKey] =
       this.currentIndexes[indexKey] > 0
         ? this.currentIndexes[indexKey] - 1
-        : categoryMovies - 1;
+        : visibleMovies.length - 1;
   }
 
   nextSlide(category: any, key: string) {
     const indexKey = `${category.id}-${key}`;
-    const categoryMovies = category.categorias[key].movies.length;
-    this.currentIndexes[indexKey] =
-      this.currentIndexes[indexKey] < categoryMovies - 1
-        ? this.currentIndexes[indexKey] + 1
-        : 0;
+    const visibleMovies = this.getVisibleMovies(category, key);
+    if (this.currentIndexes[indexKey] < visibleMovies.length - 1) {
+      this.currentIndexes[indexKey] = (this.currentIndexes[indexKey] || 0) + 1;
+    } else {
+      // Cargar más películas si estamos en la última película visible
+      this.loadMore(category, key);
+      this.currentIndexes[indexKey] = 0; // Resetear al primer índice después de cargar más
+    }
+  }
+
+  getVisibleMovies(category: any, key: string): any[] {
+    const movies = category.categorias[key].movies;
+    const count = this.visibleCount[`${category.id}-${key}`] || 8; // Mostrar inicialmente
+    return movies.slice(0, count);
+  }
+
+  loadMore(category: any, key: string) {
+    const indexKey = `${category.id}-${key}`;
+    const currentCount = this.visibleCount[indexKey] || 4;
+    if (currentCount < category.categorias[key].movies.length) {
+      this.visibleCount[indexKey] = Math.min(
+        currentCount + this.loadIncrement,
+        category.categorias[key].movies.length
+      );
+    }
   }
 
   loadUsers() {

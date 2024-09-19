@@ -199,6 +199,8 @@ header {
     text-decoration: none;
   }
 }
+
+
 .carousel-container {
   position: relative;
   width: 100%;
@@ -217,15 +219,16 @@ header {
 }
 
 .carousel-item {
-  flex: 0 0 100%;
-  box-sizing: border-box;
-  padding: 10px;
+  flex: 1 0 15%;
+    box-sizing: border-box;
+    padding: 5px;
 }
 
 .movie-poster {
   width: 100%;
   height: auto;
   display: block;
+  max-width: 150px;
 }
 
 .carousel-button {
@@ -247,6 +250,18 @@ header {
 .carousel-button-next {
   right: 10px;
 }
+
+.load-more-button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
 
 
 

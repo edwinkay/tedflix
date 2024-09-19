@@ -1,23 +1,40 @@
 <div class="viewer-container" *ngIf="ocultar">
   <h2>¿Quién está viendo?</h2>
   <div class="viewer-list">
-    <div style="display: contents;" *ngFor="let user of users; let i = index">
+    <div style="display: contents" *ngFor="let user of users; let i = index">
       <div class="viewer" *ngFor="let perfil of user.perfil; let j = index">
-        <img (click)="hide()" [src]="perfil.image" [alt]="perfil.name">
+        <img (click)="hide()" [src]="perfil.image" [alt]="perfil.name" />
         <div class="viewer-info">
-          <p *ngIf="!isEditing || (isEditing && editingIndex !== j)">{{ perfil.name }}</p>
+          <p *ngIf="!isEditing || (isEditing && editingIndex !== j)">
+            {{ perfil.name }}
+          </p>
 
-          <input *ngIf="isEditing && editingIndex === j" [(ngModel)]="perfil.name" (blur)="finishEditing(j)" />
+          <input
+            *ngIf="isEditing && editingIndex === j"
+            [(ngModel)]="perfil.name"
+            (blur)="finishEditing(j)"
+          />
 
           <div *ngIf="isManaging">
-            <ion-icon name="pencil-outline" (click)="startEditing(j)"></ion-icon>
-            <ion-icon *ngIf="j !== 0" name="trash-outline" (click)="removeProfile(j, i)"></ion-icon>
+            <ion-icon
+              name="pencil-outline"
+              (click)="startEditing(j)"
+            ></ion-icon>
+            <ion-icon
+              *ngIf="j !== 0"
+              name="trash-outline"
+              (click)="removeProfile(j, i)"
+            ></ion-icon>
           </div>
         </div>
       </div>
     </div>
     <!-- Mostrar el botón solo si hay menos de 4 perfiles en total -->
-    <div class="viewer add-profile" *ngIf="getProfileCount() < 4" (click)="onAddProfile()">
+    <div
+      class="viewer add-profile"
+      *ngIf="getProfileCount() < 4"
+      (click)="onAddProfile()"
+    >
       <div class="add-icon">+</div>
       <p>Añadir perfil</p>
     </div>
@@ -25,10 +42,11 @@
 
   <!-- Botón para administrar perfiles -->
   <div class="manage-profiles">
-    <a (click)="toggleManaging()">{{ isManaging ? 'Listo' : 'Administrar perfiles' }}</a>
+    <a (click)="toggleManaging()">{{
+      isManaging ? "Listo" : "Administrar perfiles"
+    }}</a>
   </div>
 </div>
-
 
 <div *ngIf="!ocultar" class="welcome-container">
   <div class="margen">
@@ -82,7 +100,7 @@
       </div>
 
       <!-- Secciones de películas (Tendencias, Nuevos lanzamientos, etc.) -->
-      <div *ngFor="let category of categorias">
+        <div *ngFor="let category of categorias">
     <div *ngFor="let key of getKeys(category.categorias)">
       <h3>{{ key }}</h3>
       <div class="carousel-container">
@@ -90,7 +108,7 @@
 
         <div class="carousel-wrapper">
           <div class="carousel-images" [style.transform]="getTransform(category, key)">
-            <div *ngFor="let movie of category.categorias[key].movies" class="carousel-item">
+            <div *ngFor="let movie of getVisibleMovies(category, key)" class="carousel-item">
               <img [src]="movie.image" [alt]="movie.title" class="movie-poster"/>
               <p>{{ movie.title }}</p>
             </div>
@@ -104,5 +122,3 @@
     </div>
   </div>
 </div>
-
-
