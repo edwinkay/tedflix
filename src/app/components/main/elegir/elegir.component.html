@@ -121,7 +121,8 @@
             <div class="carousel-wrapper">
               <div class="carousel-images" [style.transform]="getTransform(category, key)">
                 <div *ngFor="let movie of getVisibleMovies(category, key)" class="carousel-item">
-                  <img [src]="movie.image" [alt]="movie.title" class="movie-poster"/>
+                  <img style="cursor: pointer;" [src]="movie.image" [alt]="movie.title" class="movie-poster" (click)="openMovieSynopsis(movie)"
+/>
                   <p>{{ movie.title }}</p>
                 </div>
               </div>

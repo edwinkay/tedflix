@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
-import { MenuController } from '@ionic/angular';
+import { MenuController, ModalController } from '@ionic/angular';
 import { MoviesService } from 'src/app/services/movies.service';
 import { UsersService } from 'src/app/services/users.service';
+import { MovieSynopsisComponent } from '../movie-synopsis/movie-synopsis.component';
 
 @Component({
   selector: 'app-elegir',
@@ -46,7 +47,8 @@ export class ElegirComponent implements OnInit {
     private _user: UsersService,
     private _movies: MoviesService,
     private menuCtrl: MenuController,
-    private router: Router
+    private router: Router,
+    private modalCtrl: ModalController
   ) {}
 
   ngOnInit(): void {
@@ -249,5 +251,14 @@ export class ElegirComponent implements OnInit {
 
   openMenu() {
     this.menuCtrl.open('end');
+  }
+  async openMovieSynopsis(movie: any) {
+    const modal = await this.modalCtrl.create({
+      component: MovieSynopsisComponent,
+      componentProps: {
+        movie: movie,
+      },
+    });
+    return await modal.present();
   }
 }

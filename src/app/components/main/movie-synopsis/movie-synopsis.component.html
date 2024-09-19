@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Sinopsis</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <img [src]="movie.image" alt="{{movie.title}}" class="movie-poster"/>
+  <h2>{{ movie.title }}</h2>
+  <p>{{ movie.synopsis }}</p>
+</ion-content>
+

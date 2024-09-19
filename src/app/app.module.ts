@@ -18,6 +18,7 @@ import { HomeComponent } from './components/login/home/home.component';
 import { ElegirComponent } from './components/main/elegir/elegir.component';
 import { MainComponent } from './components/main/main/main.component';
 import { environment } from 'src/environments/environment';
+import { MovieSynopsisComponent } from './components/main/movie-synopsis/movie-synopsis.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,6 +28,7 @@ import { environment } from 'src/environments/environment';
     HomeComponent,
     ElegirComponent,
     MainComponent,
+    MovieSynopsisComponent
   ],
   imports: [
     BrowserModule,
