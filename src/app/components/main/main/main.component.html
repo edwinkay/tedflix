@@ -1,24 +1,4 @@
 <div class="mobile">
-  <ion-menu side="end" contentId="main-content">
-    <ion-header>
-      <ion-toolbar>
-        <div style="display: flex">
-          <ion-title>Hola! {{ seleccion?.name }}</ion-title>
-          <img
-            style="width: 42px"
-            [src]="seleccion?.image"
-            alt="Seleccionada"
-          />
-        </div>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      <ion-list>
-        <ion-item (click)="changeProfile()">Cambiar perfil</ion-item>
-        <ion-item (click)="cerrar()">Cerrar sesion</ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-menu>
 
   <div class="ion-page" id="main-content">
     <ion-header>
@@ -47,22 +27,6 @@
     <ion-content>
       <div class="margen">
         <div class="overlay"></div>
-
-        <ion-menu side="end" contentId="main-content" #menu>
-          <ion-header>
-            <ion-toolbar>
-              <ion-title>Hola! {{ seleccion?.name }}</ion-title>
-            </ion-toolbar>
-          </ion-header>
-          <ion-content class="ion-padding">
-            <ion-list style="cursor: pointer" (click)="changeProfile()"
-              >Cambiar de perfil</ion-list
-            >
-            <ion-list style="cursor: pointer" (click)="cerrar()"
-              >Cerrar sesion</ion-list
-            >
-          </ion-content>
-        </ion-menu>
 
         <div class="container" id="main-content">
           <!-- Sección del carrusel de contenido destacado -->
@@ -192,21 +156,6 @@
       </div>
     </header>
 
-    <ion-menu side="end" contentId="main-content" #menu>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Hola! {{ seleccion?.name }}</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <ion-list style="cursor: pointer" (click)="changeProfile()"
-          >Cambiar de perfil</ion-list
-        >
-        <ion-list style="cursor: pointer" (click)="cerrar()"
-          >Cerrar sesion</ion-list
-        >
-      </ion-content>
-    </ion-menu>
 
     <div class="container" id="main-content">
       <!-- Sección del carrusel de contenido destacado -->
@@ -269,3 +218,25 @@
     </div>
   </div>
 </div>
+
+
+<ion-menu side="end" contentId="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <div style="display: flex">
+          <ion-title>Hola! {{ seleccion?.name }}</ion-title>
+          <img
+            style="width: 42px"
+            [src]="seleccion?.image"
+            alt="Seleccionada"
+          />
+        </div>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-list>
+        <ion-item (click)="changeProfile()">Cambiar perfil</ion-item>
+        <ion-item (click)="cerrar()">Cerrar sesion</ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
