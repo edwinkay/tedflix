@@ -248,4 +248,31 @@ header {
 }
 
 
+.carousel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  width: -webkit-fill-available;
+}
 
+.carousel img {
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  opacity: 1;
+}
+.btn-prev-next {
+  background: none;
+  position: absolute;
+}
+
+.btn-next {
+  position: relative;
+    bottom: 29px;
+}
+
+.icon-prev{
+  position: relative;
+    bottom: 29px;
+    font-size: large;
+    background-color: gray;
+}

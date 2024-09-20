@@ -21,28 +21,20 @@ export class MainComponent implements OnInit {
   newFeatures: any[] = [];
   tendencias: any[] = [];
   filteredNewFeatures: any[] = [];
+  filteredNewFeaturesm: any[] = [];
   filteredTendencias: any[] = [];
-
-  isEditing = false;
-  editingIndex: number | null = null;
-  isManaging = false;
-  id: any;
-  uid: any;
-  idUser: any;
-  comprobar = false;
+  filteredTendenciasm: any[] = [];
 
   selectedMovie: any;
 
-  ocultar = true;
   slideOpts: any;
   busqueda = false;
 
   searchTerm: string = '';
   filteredMovies: any[] = [];
 
-  private currentIndexes: { [key: string]: number } = {};
-  private visibleCount: { [key: string]: number } = {};
-  private loadIncrement = 8;
+  displayedPhotos: any[] = [];
+  currentIndex: number = 0;
 
   constructor(
     private _dataPerfil: PerfilService,
@@ -62,27 +54,27 @@ export class MainComponent implements OnInit {
   scan() {
     this.busqueda = !this.busqueda;
   }
-  searchMovies(event: any) {
-    const searchTerm = event.detail.value.toLowerCase();
-    this.filteredMovies = this.categorias.map((category: any) => {
-      return {
-        ...category,
-        categorias: Object.keys(category.categorias).reduce(
-          (acc: any, key: string) => {
-            acc[key] = {
-              ...category.categorias[key],
-              movies: category.categorias[key].movies.filter((movie: any) =>
-                movie.title.toLowerCase().includes(searchTerm)
-              ),
-            };
-            return acc;
-          },
-          {}
-        ),
-      };
-    });
-  }
+
   filterMovies() {
+    if (this.searchTerm) {
+      const searchTermLower = this.searchTerm.toLowerCase();
+
+      // Filtrar Nuevos lanzamientos
+      this.filteredNewFeaturesm = this.newFeatures.filter((movie) =>
+        movie.title.toLowerCase().includes(searchTermLower)
+      );
+
+      // Filtrar Tendencias
+      this.filteredTendenciasm = this.tendencias.filter((movie) =>
+        movie.title.toLowerCase().includes(searchTermLower)
+      );
+    } else {
+      // Si no hay término de búsqueda, mostrar todas las películas
+      this.filteredNewFeaturesm = [...this.newFeatures];
+      this.filteredTendenciasm = [...this.tendencias];
+    }
+  }
+  filterMovies2() {
     if (this.searchTerm) {
       const searchTermLower = this.searchTerm.toLowerCase();
 
@@ -96,9 +88,9 @@ export class MainComponent implements OnInit {
         movie.title.toLowerCase().includes(searchTermLower)
       );
     } else {
-      // Si no hay término de búsqueda, mostrar todas las películas
-      this.filteredNewFeatures = [...this.newFeatures];
-      this.filteredTendencias = [...this.tendencias];
+      // Si no hay término de búsqueda, mostrar solo las primeras 7 películas
+      this.filteredNewFeatures = this.newFeatures.slice(0, 7);
+      this.filteredTendencias = this.tendencias.slice(0, 7);
     }
   }
 
@@ -110,77 +102,84 @@ export class MainComponent implements OnInit {
       const td = mov[0].categorias['tendencias'].movies;
       this.tendencias = td;
 
-      this.filteredNewFeatures = nl;
-      this.filteredTendencias = td;
+
+      this.filteredNewFeatures = nl.slice(0, 7);
+      this.filteredNewFeaturesm = nl
+      this.filteredTendencias = td.slice(0, 7);
+      this.filteredTendenciasm = td
+
+      this.currentIndex = 0;
     });
   }
-  scrollLeft(container: HTMLElement) {
-    const scrollAmount = container.clientWidth * 0.8; // 80% del ancho del contenedor
-    container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-  }
 
-  scrollRight(container: HTMLElement) {
-    const scrollAmount = container.clientWidth * 0.8; // 80% del ancho del contenedor
-    container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-  }
-
-  onScroll(event: any) {
-    const element = event.target;
-    if (element.scrollWidth - element.scrollLeft === element.clientWidth) {
-      element.scrollTo({ left: 0, behavior: 'smooth' });
-    }
-  }
-
-  getKeys(obj: any): string[] {
-    return Object.keys(obj);
-  }
-  getTransform(category: any, key: string): string {
-    const currentIndex = this.currentIndexes[`${category.id}-${key}`] || 0;
-    return `translateX(-${currentIndex * 100}%)`;
-  }
-
-  prevSlide(category: any, key: string) {
-    const indexKey = `${category.id}-${key}`;
-    const visibleMovies = this.getVisibleMovies(category, key);
-    this.currentIndexes[indexKey] =
-      this.currentIndexes[indexKey] > 0
-        ? this.currentIndexes[indexKey] - 1
-        : visibleMovies.length - 1;
-  }
-
-  nextSlide(category: any, key: string) {
-    const indexKey = `${category.id}-${key}`;
-    console.log(indexKey)
-    const visibleMovies = this.getVisibleMovies(category, key);
-    if (this.currentIndexes[indexKey] < visibleMovies.length - 1) {
-      this.currentIndexes[indexKey] = (this.currentIndexes[indexKey] || 0) + 1;
-    } else {
-      // Cargar más películas si estamos en la última película visible
-      this.loadMore(category, key);
-      this.currentIndexes[indexKey] = 0; // Resetear al primer índice después de cargar más
-    }
-  }
-
-  getVisibleMovies(category: any, key: string): any[] {
-    const movies = this.filteredMovies.length
-      ? this.filteredMovies.find((cat) => cat.id === category.id)?.categorias[
-          key
-        ]?.movies || []
-      : category.categorias[key].movies;
-    const count = this.visibleCount[`${category.id}-${key}`] || 8; // Mostrar inicialmente
-    return movies.slice(0, count);
-  }
-
-  loadMore(category: any, key: string) {
-    const indexKey = `${category.id}-${key}`;
-    const currentCount = this.visibleCount[indexKey] || 0;
-    if (currentCount < category.categorias[key].movies.length) {
-      this.visibleCount[indexKey] = Math.min(
-        currentCount + this.loadIncrement,
-        category.categorias[key].movies.length
+  nextPhoto() {
+    if (this.newFeatures.length > 7) {
+      this.currentIndex = (this.currentIndex + 1) % this.newFeatures.length;
+      this.filteredNewFeatures = this.newFeatures.slice(
+        this.currentIndex,
+        this.currentIndex + 7
       );
+
+      // Si llegamos al final de la lista, regresamos al inicio
+      if (this.filteredNewFeatures.length < 7) {
+        this.filteredNewFeatures = this.filteredNewFeatures.concat(
+          this.newFeatures.slice(0, 7 - this.filteredNewFeatures.length)
+        );
+      }
     }
   }
+
+  prevPhoto() {
+    if (this.newFeatures.length > 7) {
+      this.currentIndex =
+        (this.currentIndex - 1 + this.newFeatures.length) %
+        this.newFeatures.length;
+      this.filteredNewFeatures = this.newFeatures.slice(
+        this.currentIndex,
+        this.currentIndex + 7
+      );
+
+      // Si llegamos al principio de la lista, volvemos al final
+      if (this.filteredNewFeatures.length < 7) {
+        this.filteredNewFeatures = this.newFeatures.slice(-7);
+      }
+    }
+  }
+
+  nextPhotoTendencias() {
+    if (this.tendencias.length > 7) {
+      this.currentIndex = (this.currentIndex + 1) % this.tendencias.length;
+      this.filteredTendencias = this.tendencias.slice(
+        this.currentIndex,
+        this.currentIndex + 7
+      );
+
+      // Si llegamos al final de la lista, regresamos al inicio
+      if (this.filteredTendencias.length < 7) {
+        this.filteredTendencias = this.filteredTendencias.concat(
+          this.tendencias.slice(0, 7 - this.filteredTendencias.length)
+        );
+      }
+    }
+  }
+
+  prevPhotoTendencias() {
+    if (this.tendencias.length > 7) {
+      this.currentIndex =
+        (this.currentIndex - 1 + this.tendencias.length) %
+        this.tendencias.length;
+      this.filteredTendencias = this.tendencias.slice(
+        this.currentIndex,
+        this.currentIndex + 7
+      );
+
+      // Si llegamos al principio de la lista, volvemos al final
+      if (this.filteredTendencias.length < 7) {
+        this.filteredTendencias = this.tendencias.slice(-7);
+      }
+    }
+  }
+
   async cerrarSesion() {
     await this.menu?.close();
     this.afAuth.signOut().then(() => {
@@ -203,4 +202,3 @@ export class MainComponent implements OnInit {
     return await modal.present();
   }
 }
-
