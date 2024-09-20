@@ -1,5 +1,4 @@
 <div class="mobile">
-
   <div class="ion-page" id="main-content">
     <ion-header>
       <ion-toolbar>
@@ -17,10 +16,10 @@
           </ion-buttons>
         </div>
         <ion-searchbar
-            *ngIf="busqueda"
-            [(ngModel)]="searchTerm"
-            (ionInput)="searchMovies($event)"
-          ></ion-searchbar>
+          *ngIf="busqueda"
+          [(ngModel)]="searchTerm"
+          (ionInput)="searchMovies($event)"
+        ></ion-searchbar>
       </ion-toolbar>
     </ion-header>
 
@@ -44,50 +43,40 @@
           </div>
 
           <!-- Secciones de películas (Tendencias, Nuevos lanzamientos, etc.) -->
-          <div
-            style="width: -webkit-fill-available"
-            *ngFor="let category of categorias"
-          >
-            <div *ngFor="let key of getKeys(category.categorias)">
-              <h3>{{ key }}</h3>
-              <div class="carousel-container">
-                <button
-                  (click)="prevSlide(category, key)"
-                  class="carousel-button carousel-button-prev"
-                >
-                  &#10094;
-                </button>
 
-                <div class="carousel-wrapper">
-                  <div
-                    class="carousel-images"
-                    [style.transform]="getTransform(category, key)"
-                  >
-                    <!-- Modifica para usar filteredMovies -->
-                    <div
-                      *ngFor="let movie of getVisibleMovies(category, key)"
-                      class="carousel-item"
-                    >
-                      <img
-                        style="cursor: pointer"
-                        [src]="movie.image"
-                        [alt]="movie.title"
-                        class="movie-poster"
-                        (click)="openMovieSynopsis(movie)"
-                      />
-                      <p>{{ movie.title }}</p>
-                    </div>
+          <h3 style="width: 100%">Nuevos lanzamientos</h3>
+          <div class="horizontal-scroll" (scroll)="onScroll($event)">
+            <ion-list lines="none">
+              <ion-item
+                style="margin: 0;"
+                *ngFor="let item of newFeatures; let index"
+                class="horizontal-item"
+              >
+                <div>
+                  <div class="custom-avatar">
+                    <img (click)="openMovieSynopsis(item)" [src]="item.image + index" alt="avatar" />
                   </div>
+                  <ion-label>{{ item.title }}</ion-label>
                 </div>
-
-                <button
-                  (click)="nextSlide(category, key)"
-                  class="carousel-button carousel-button-next"
-                >
-                  &#10095;
-                </button>
-              </div>
-            </div>
+              </ion-item>
+            </ion-list>
+          </div>
+          <h3 style="width: 100%">Tendencias</h3>
+          <div class="horizontal-scroll" (scroll)="onScroll($event)">
+            <ion-list lines="none">
+              <ion-item
+                style="margin: 0;"
+                *ngFor="let item of tendencias; let index"
+                class="horizontal-item"
+              >
+                <div>
+                  <div class="custom-avatar">
+                    <img (click)="openMovieSynopsis(item)" [src]="item.image + index" alt="avatar" />
+                  </div>
+                  <ion-label>{{ item.title }}</ion-label>
+                </div>
+              </ion-item>
+            </ion-list>
           </div>
         </div>
       </div>
@@ -156,7 +145,6 @@
       </div>
     </header>
 
-
     <div class="container" id="main-content">
       <!-- Sección del carrusel de contenido destacado -->
       <div *ngIf="!busqueda" class="featured-content">
@@ -219,24 +207,23 @@
   </div>
 </div>
 
-
 <ion-menu side="end" contentId="main-content">
-    <ion-header>
-      <ion-toolbar>
-        <div style="display: flex">
-          <ion-title>Hola! {{ seleccion?.name }}</ion-title>
-          <img
-            style="width: 42px"
-            [src]="seleccion?.image"
-            alt="Seleccionada"
-          />
-        </div>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      <ion-list>
-        <ion-item style="cursor: pointer;"  (click)="changeProfile()">Cambiar perfil</ion-item>
-        <ion-item style="cursor: pointer;" (click)="cerrarSesion()">Cerrar sesion</ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-menu>
+  <ion-header>
+    <ion-toolbar>
+      <div style="display: flex">
+        <ion-title>Hola! {{ seleccion?.name }}</ion-title>
+        <img style="width: 42px" [src]="seleccion?.image" alt="Seleccionada" />
+      </div>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-list>
+      <ion-item style="cursor: pointer" (click)="changeProfile()"
+        >Cambiar perfil</ion-item
+      >
+      <ion-item style="cursor: pointer" (click)="cerrarSesion()"
+        >Cerrar sesion</ion-item
+      >
+    </ion-list>
+  </ion-content>
+</ion-menu>

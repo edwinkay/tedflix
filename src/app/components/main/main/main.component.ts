@@ -18,6 +18,8 @@ export class MainComponent implements OnInit {
 
   users: any[] = [];
   categorias: any[] = [];
+  newFeatures: any[] = [];
+  tendencias: any[] = [];
   isEditing = false;
   editingIndex: number | null = null;
   isManaging = false;
@@ -27,7 +29,6 @@ export class MainComponent implements OnInit {
   comprobar = false;
 
   selectedMovie: any;
-  private userVerified = false;
 
   ocultar = true;
   slideOpts: any;
@@ -82,8 +83,20 @@ export class MainComponent implements OnInit {
   loadMovies() {
     this._movies.getMovies().subscribe((mov) => {
       this.categorias = mov;
+      console.log(mov)
+      const nl = mov[0].categorias['Nuevos lanzamientos'].movies;
+      this.newFeatures = nl;
+      const td = mov[0].categorias['tendencias'].movies;
+      this.tendencias = td;
     });
   }
+  onScroll(event: any) {
+    const element = event.target;
+    if (element.scrollWidth - element.scrollLeft === element.clientWidth) {
+      element.scrollTo({ left: 0, behavior: 'smooth' });
+    }
+  }
+
   getKeys(obj: any): string[] {
     return Object.keys(obj);
   }

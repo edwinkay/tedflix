@@ -210,3 +210,23 @@ header {
 
 
 }
+
+.custom-avatar img {
+  width: 120px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  white-space: nowrap;
+  width: -webkit-fill-available;
+}
+
+.horizontal-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+

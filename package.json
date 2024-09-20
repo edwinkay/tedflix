@@ -31,6 +31,7 @@
     "@capacitor/status-bar": "6.0.1",
     "@ionic/angular": "^8.0.0",
     "firebase": "^10.12.1",
+    "hammerjs": "^2.0.8",
     "ionicons": "^7.0.0",
     "rxjs": "~7.8.0",
     "swiper": "^11.1.14",

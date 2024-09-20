@@ -1,5 +1,5 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -35,6 +35,7 @@ import { MovieSynopsisComponent } from './components/main/movie-synopsis/movie-s
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    HammerModule,
     IonicModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebase),
     AppRoutingModule,
