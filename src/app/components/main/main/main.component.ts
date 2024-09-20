@@ -20,6 +20,9 @@ export class MainComponent implements OnInit {
   categorias: any[] = [];
   newFeatures: any[] = [];
   tendencias: any[] = [];
+  filteredNewFeatures: any[] = [];
+  filteredTendencias: any[] = [];
+
   isEditing = false;
   editingIndex: number | null = null;
   isManaging = false;
@@ -79,15 +82,36 @@ export class MainComponent implements OnInit {
       };
     });
   }
+  filterMovies() {
+    if (this.searchTerm) {
+      const searchTermLower = this.searchTerm.toLowerCase();
+
+      // Filtrar Nuevos lanzamientos
+      this.filteredNewFeatures = this.newFeatures.filter((movie) =>
+        movie.title.toLowerCase().includes(searchTermLower)
+      );
+
+      // Filtrar Tendencias
+      this.filteredTendencias = this.tendencias.filter((movie) =>
+        movie.title.toLowerCase().includes(searchTermLower)
+      );
+    } else {
+      // Si no hay término de búsqueda, mostrar todas las películas
+      this.filteredNewFeatures = [...this.newFeatures];
+      this.filteredTendencias = [...this.tendencias];
+    }
+  }
 
   loadMovies() {
     this._movies.getMovies().subscribe((mov) => {
       this.categorias = mov;
-      console.log(mov)
       const nl = mov[0].categorias['Nuevos lanzamientos'].movies;
       this.newFeatures = nl;
       const td = mov[0].categorias['tendencias'].movies;
       this.tendencias = td;
+
+      this.filteredNewFeatures = nl;
+      this.filteredTendencias = td;
     });
   }
   onScroll(event: any) {
