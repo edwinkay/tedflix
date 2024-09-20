@@ -44,40 +44,93 @@
 
           <!-- Secciones de películas (Tendencias, Nuevos lanzamientos, etc.) -->
 
+          <!-- Nuevos lanzamientos -->
           <h3 style="width: 100%">Nuevos lanzamientos</h3>
-          <div class="horizontal-scroll" (scroll)="onScroll($event)">
+          <div
+            class="horizontal-scroll"
+            #newReleasesContainer
+            (scroll)="onScroll($event)"
+          >
             <ion-list lines="none">
               <ion-item
-                style="margin: 0;"
+                style="margin: 0"
                 *ngFor="let item of filteredNewFeatures; let index"
                 class="horizontal-item"
               >
                 <div>
                   <div class="custom-avatar">
-                    <img (click)="openMovieSynopsis(item)" [src]="item.image + index" alt="avatar" />
+                    <img
+                      (click)="openMovieSynopsis(item)"
+                      [src]="item.image + index"
+                      alt="avatar"
+                    />
                   </div>
                   <ion-label>{{ item.title }}</ion-label>
                 </div>
               </ion-item>
             </ion-list>
           </div>
+
+          <!-- Botones para Nuevos lanzamientos -->
+
+          <div class="btn">
+            <button
+              class="scroll-button prev-button"
+              (click)="scrollLeft(newReleasesContainer)"
+            >
+              <ion-icon style="font-size: large;" name="arrow-back-outline"></ion-icon>
+            </button>
+            <button
+              class="scroll-button next-button"
+              (click)="scrollRight(newReleasesContainer)"
+            >
+              <ion-icon style="font-size: large;" name="arrow-forward-outline"></ion-icon>
+            </button>
+          </div>
+
+          <!-- Tendencias -->
           <h3 style="width: 100%">Tendencias</h3>
-          <div class="horizontal-scroll" (scroll)="onScroll($event)">
+          <div
+            class="horizontal-scroll"
+            #tendenciasContainer
+            (scroll)="onScroll($event)"
+          >
             <ion-list lines="none">
               <ion-item
-                style="margin: 0;"
+                style="margin: 0"
                 *ngFor="let item of filteredTendencias; let index"
                 class="horizontal-item"
               >
                 <div>
                   <div class="custom-avatar">
-                    <img (click)="openMovieSynopsis(item)" [src]="item.image + index" alt="avatar" />
+                    <img
+                      (click)="openMovieSynopsis(item)"
+                      [src]="item.image + index"
+                      alt="avatar"
+                    />
                   </div>
                   <ion-label>{{ item.title }}</ion-label>
                 </div>
               </ion-item>
             </ion-list>
           </div>
+
+          <!-- Botones para Tendencias -->
+          <div class="btn">
+            <button
+            class="scroll-button prev-button"
+            (click)="scrollLeft(tendenciasContainer)"
+          >
+            <ion-icon style="font-size: large;" name="arrow-back-outline"></ion-icon>
+          </button>
+          <button
+            class="scroll-button next-button"
+            (click)="scrollRight(tendenciasContainer)"
+          >
+            <ion-icon style="font-size: large;" name="arrow-forward-outline"></ion-icon>
+          </button>
+          </div>
+
         </div>
       </div>
     </ion-content>

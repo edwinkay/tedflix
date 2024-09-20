@@ -114,6 +114,16 @@ export class MainComponent implements OnInit {
       this.filteredTendencias = td;
     });
   }
+  scrollLeft(container: HTMLElement) {
+    const scrollAmount = container.clientWidth * 0.8; // 80% del ancho del contenedor
+    container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  }
+
+  scrollRight(container: HTMLElement) {
+    const scrollAmount = container.clientWidth * 0.8; // 80% del ancho del contenedor
+    container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  }
+
   onScroll(event: any) {
     const element = event.target;
     if (element.scrollWidth - element.scrollLeft === element.clientWidth) {
@@ -140,6 +150,7 @@ export class MainComponent implements OnInit {
 
   nextSlide(category: any, key: string) {
     const indexKey = `${category.id}-${key}`;
+    console.log(indexKey)
     const visibleMovies = this.getVisibleMovies(category, key);
     if (this.currentIndexes[indexKey] < visibleMovies.length - 1) {
       this.currentIndexes[indexKey] = (this.currentIndexes[indexKey] || 0) + 1;
@@ -162,7 +173,7 @@ export class MainComponent implements OnInit {
 
   loadMore(category: any, key: string) {
     const indexKey = `${category.id}-${key}`;
-    const currentCount = this.visibleCount[indexKey] || 4;
+    const currentCount = this.visibleCount[indexKey] || 0;
     if (currentCount < category.categorias[key].movies.length) {
       this.visibleCount[indexKey] = Math.min(
         currentCount + this.loadIncrement,

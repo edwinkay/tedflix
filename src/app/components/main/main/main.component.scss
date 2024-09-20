@@ -223,10 +223,29 @@ header {
   scroll-behavior: smooth;
   white-space: nowrap;
   width: -webkit-fill-available;
+
+  /* Ocultar la barra de desplazamiento */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari y Opera */
 }
 
 .horizontal-item {
   display: inline-block;
   margin-right: 10px;
 }
+
+.btn{
+  display:  none !important;
+  bottom: 76px;
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+
 
