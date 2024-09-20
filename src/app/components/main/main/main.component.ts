@@ -133,8 +133,8 @@ export class MainComponent implements OnInit {
       );
     }
   }
-  async cerrar() {
-    await this.menu.close(); // Cerrar el menú
+  async cerrarSesion() {
+    await this.menu?.close();
     this.afAuth.signOut().then(() => {
       this.router.navigate(['/login']);
     });
