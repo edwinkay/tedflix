@@ -1,0 +1,145 @@
+<div class="mobile">
+  <div class="ion-page" id="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <div class="mb-nav">
+          <div class="logo-mobile">T</div>
+          <div class="navbar">
+            <a>Inicio</a>
+            <a class="hide">Series</a>
+            <a>Películas</a>
+            <a class="hide">Novedades</a>
+            <a>Mi Lista</a>
+          </div>
+          <ion-buttons slot="end">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
+        </div>
+        <ion-searchbar
+          *ngIf="busqueda"
+          [(ngModel)]="searchTerm"
+          (ionInput)="filterMovies()"
+        ></ion-searchbar>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <div class="margen">
+        <div class="overlay"></div>
+
+        <div class="container" id="main-content">
+          <!-- Sección del carrusel de contenido destacado -->
+          <div *ngIf="!busqueda" class="featured-content">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/tedflix-3dc61.appspot.com/o/movies%2Fbackdrop.jpg?alt=media&token=9e185a2d-7275-49ed-ac47-9ca737cee88c"
+              alt="Destacado"
+            />
+            <div class="featured-info">
+              <h2>Película Destacada</h2>
+              <p>Descripción breve de la película destacada...</p>
+              <ion-button color="danger">Ver ahora</ion-button>
+              <ion-button fill="outline">Mi lista</ion-button>
+            </div>
+          </div>
+
+          <!-- Secciones de películas (Tendencias, Nuevos lanzamientos, etc.) -->
+
+          <!-- Nuevos lanzamientos -->
+          <h3 style="width: 100%">Nuevos lanzamientos</h3>
+          <div class="horizontal-scroll" #newReleasesContainer>
+            <ion-list lines="none">
+              <ion-item
+                style="margin: 0"
+                *ngFor="let item of filteredNewFeaturesm; let index"
+                class="horizontal-item"
+              >
+                <div>
+                  <div class="custom-avatar">
+                    <img
+                      (click)="openMovieSynopsis(item)"
+                      [src]="item.image + index"
+                      alt="avatar"
+                    />
+                  </div>
+                  <ion-label>{{ item.title }}</ion-label>
+                </div>
+              </ion-item>
+            </ion-list>
+          </div>
+
+          <!-- Botones para Nuevos lanzamientos -->
+
+          <div class="btn">
+            <button class="scroll-button prev-button">
+              <ion-icon
+                style="font-size: large"
+                name="arrow-back-outline"
+              ></ion-icon>
+            </button>
+            <button class="scroll-button next-button">
+              <ion-icon
+                style="font-size: large"
+                name="arrow-forward-outline"
+              ></ion-icon>
+            </button>
+          </div>
+
+          <!-- Tendencias -->
+          <h3 style="width: 100%">Tendencias</h3>
+          <div class="horizontal-scroll" #tendenciasContainer>
+            <ion-list lines="none">
+              <ion-item
+                style="margin: 0"
+                *ngFor="let item of filteredTendenciasm; let index"
+                class="horizontal-item"
+              >
+                <div>
+                  <div class="custom-avatar">
+                    <img
+                      (click)="openMovieSynopsis(item)"
+                      [src]="item.image + index"
+                      alt="avatar"
+                    />
+                  </div>
+                  <ion-label>{{ item.title }}</ion-label>
+                </div>
+              </ion-item>
+            </ion-list>
+          </div>
+
+          <!-- Botones para Tendencias -->
+          <div class="btn">
+            <button class="scroll-button prev-button">
+              <ion-icon
+                style="font-size: large"
+                name="arrow-back-outline"
+              ></ion-icon>
+            </button>
+            <button class="scroll-button next-button">
+              <ion-icon
+                style="font-size: large"
+                name="arrow-forward-outline"
+              ></ion-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </ion-content>
+
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button>
+        <ion-icon name="home-outline"></ion-icon>
+        <ion-label>Inicio</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button>
+        <ion-icon name="search-outline"></ion-icon>
+        <ion-label (click)="scan()">Busqueda</ion-label>
+      </ion-tab-button>
+      <ion-tab-button>
+        <ion-icon name="person-circle-outline"></ion-icon>
+        <ion-label>Perfil</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </div>
+</div>

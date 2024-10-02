@@ -1,0 +1,101 @@
+<div class="welcome-container">
+  <div class="margen">
+    <div class="overlay"></div>
+
+    <header>
+      <div class="netflix-logo">
+        <span>T</span>
+        <span>E</span>
+        <span>D</span>
+        <span>F</span>
+        <span>L</span>
+        <span>I</span>
+        <span>X</span>
+      </div>
+      <div class="navbar">
+        <a>Inicio</a>
+        <a class="hide">Series</a>
+        <a>Películas</a>
+        <a class="hide">Novedades</a>
+        <a>Mi Lista</a>
+      </div>
+      <div>
+        <ion-buttons slot="end">
+          <ion-searchbar
+            style="width: max-content"
+            *ngIf="busqueda"
+            [(ngModel)]="searchTerm"
+            (ionInput)="filterMovies2()"
+          ></ion-searchbar>
+          <ion-button (click)="scan()">
+            <ion-icon name="search-outline"></ion-icon>
+          </ion-button>
+          <ion-button class="notification">
+            <ion-icon name="notifications-outline"></ion-icon>
+          </ion-button>
+          <ion-button (click)="openMenu()">
+            <img
+              style="width: 82px"
+              [src]="seleccion?.image"
+              alt="Seleccionada"
+            />
+          </ion-button>
+        </ion-buttons>
+      </div>
+    </header>
+
+    <div class="container" id="main-content">
+      <!-- Sección del carrusel de contenido destacado -->
+      <div *ngIf="!busqueda" class="featured-content">
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/tedflix-3dc61.appspot.com/o/movies%2Fbackdrop.jpg?alt=media&token=9e185a2d-7275-49ed-ac47-9ca737cee88c"
+          alt="Destacado"
+        />
+        <div class="featured-info">
+          <h2>Película Destacada</h2>
+          <p>Descripción breve de la película destacada...</p>
+          <ion-button color="danger">Ver ahora</ion-button>
+          <ion-button fill="outline">Mi lista</ion-button>
+        </div>
+      </div>
+
+      <!-- Secciones de películas (Tendencias, Nuevos lanzamientos, etc.) -->
+
+      <h3 style="width: 100%; font-weight: bold">Tendencias</h3>
+<div class="carousel">
+  <button class="btn-prev-next" (click)="prevPhotoTendencias()">
+    <ion-icon class="icon-prev" name="arrow-back-outline"></ion-icon>
+  </button>
+
+  <div *ngFor="let photo of filteredTendencias; let i = index">
+    <img (click)="openMovieSynopsis(photo)" [src]="photo.image" [alt]="photo.title" style="width: 160px" />
+    <h2>{{ photo.title }}</h2>
+  </div>
+
+  <button class="btn-next" (click)="nextPhotoTendencias()">
+    <ion-icon style="font-size: large" name="arrow-forward-outline"></ion-icon>
+  </button>
+</div>
+
+
+      <h3 style="width: 100%; font-weight: bold">Nuevos lanzamientos</h3>
+      <div class="carousel">
+        <button class="btn-prev-next" (click)="prevPhoto()">
+          <ion-icon class="icon-prev" name="arrow-back-outline"></ion-icon>
+        </button>
+
+        <div *ngFor="let photo of filteredNewFeatures; let i = index">
+          <img (click)="openMovieSynopsis(photo)" [src]="photo.image" [alt]="photo.title" style="width: 160px" />
+          <h2>{{ photo.title }}</h2>
+        </div>
+
+        <button class="btn-next" (click)="nextPhoto()">
+          <ion-icon
+            style="font-size: large"
+            name="arrow-forward-outline"
+          ></ion-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

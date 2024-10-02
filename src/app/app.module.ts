@@ -19,6 +19,8 @@ import { ElegirComponent } from './components/main/elegir/elegir.component';
 import { MainComponent } from './components/main/main/main.component';
 import { environment } from 'src/environments/environment';
 import { MovieSynopsisComponent } from './components/main/movie-synopsis/movie-synopsis.component';
+import { MobileMainComponent } from './components/main/mobile-main/mobile-main.component';
+import { DesktopMainComponent } from './components/main/desktop-main/desktop-main.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,7 +30,9 @@ import { MovieSynopsisComponent } from './components/main/movie-synopsis/movie-s
     HomeComponent,
     ElegirComponent,
     MainComponent,
-    MovieSynopsisComponent
+    MovieSynopsisComponent,
+    MobileMainComponent,
+    DesktopMainComponent
   ],
   imports: [
     BrowserModule,
