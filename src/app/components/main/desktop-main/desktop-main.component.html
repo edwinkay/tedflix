@@ -1,4 +1,5 @@
 <div class="welcome-container">
+
   <div class="margen">
     <div class="overlay"></div>
 
@@ -19,24 +20,18 @@
         <a class="hide">Novedades</a>
         <a>Mi Lista</a>
       </div>
-      <div>
+      <div style="width: 55%;">
         <ion-buttons slot="end">
           <ion-searchbar
-            style="width: max-content"
-            *ngIf="busqueda"
-            [(ngModel)]="searchTerm"
-            (ionInput)="filterMovies2()"
+            (ionInput)="searchMovies($event.target.value)"
           ></ion-searchbar>
-          <ion-button (click)="scan()">
-            <ion-icon name="search-outline"></ion-icon>
-          </ion-button>
           <ion-button class="notification">
             <ion-icon name="notifications-outline"></ion-icon>
           </ion-button>
           <ion-button (click)="openMenu()">
             <img
-              style="width: 82px"
-              [src]="seleccion?.image"
+              style="width: 50px"
+              [src]="seleccion2?.image || storage2?.image"
               alt="Seleccionada"
             />
           </ion-button>
@@ -44,57 +39,410 @@
       </div>
     </header>
 
-    <div class="container" id="main-content">
+    <div  class="container" id="main-content">
       <!-- Sección del carrusel de contenido destacado -->
-      <div *ngIf="!busqueda" class="featured-content">
-        <img
-          src="https://firebasestorage.googleapis.com/v0/b/tedflix-3dc61.appspot.com/o/movies%2Fbackdrop.jpg?alt=media&token=9e185a2d-7275-49ed-ac47-9ca737cee88c"
-          alt="Destacado"
-        />
-        <div class="featured-info">
-          <h2>Película Destacada</h2>
-          <p>Descripción breve de la película destacada...</p>
-          <ion-button color="danger">Ver ahora</ion-button>
-          <ion-button fill="outline">Mi lista</ion-button>
+      <div (click)="openMovieSynopsis(selectedMovie)" class="featured-content">
+        <div style="display: flex; gap: 1rem">
+          <img
+            style="width: 26%"
+            [src]="
+              'https://image.tmdb.org/t/p/w500' + selectedMovie?.poster_path
+            "
+            alt="{{ selectedMovie?.title }}"
+          />
+          <div class="featured-info">
+            <h2>{{ selectedMovie?.title }}</h2>
+            <p>{{ selectedMovie?.overview }}</p>
+            <p>
+              <strong>Fecha de lanzamiento:</strong>
+              {{ selectedMovie?.release_date }}
+            </p>
+            <p>
+              <strong>Duración:</strong> {{ selectedMovie?.runtime }} minutos
+            </p>
+            <p>
+              <strong>Calificación:</strong>
+              {{ selectedMovie?.vote_average }}/10
+            </p>
+            <p><strong>Votos:</strong> {{ selectedMovie?.vote_count }}</p>
+            <ion-button color="danger">Ver ahora</ion-button>
+            <ion-button fill="outline">Mi lista</ion-button>
+          </div>
         </div>
       </div>
 
       <!-- Secciones de películas (Tendencias, Nuevos lanzamientos, etc.) -->
-
-      <h3 style="width: 100%; font-weight: bold">Tendencias</h3>
-<div class="carousel">
-  <button class="btn-prev-next" (click)="prevPhotoTendencias()">
-    <ion-icon class="icon-prev" name="arrow-back-outline"></ion-icon>
-  </button>
-
-  <div *ngFor="let photo of filteredTendencias; let i = index">
-    <img (click)="openMovieSynopsis(photo)" [src]="photo.image" [alt]="photo.title" style="width: 160px" />
-    <h2>{{ photo.title }}</h2>
-  </div>
-
-  <button class="btn-next" (click)="nextPhotoTendencias()">
-    <ion-icon style="font-size: large" name="arrow-forward-outline"></ion-icon>
-  </button>
-</div>
-
-
-      <h3 style="width: 100%; font-weight: bold">Nuevos lanzamientos</h3>
-      <div class="carousel">
-        <button class="btn-prev-next" (click)="prevPhoto()">
-          <ion-icon class="icon-prev" name="arrow-back-outline"></ion-icon>
-        </button>
-
-        <div *ngFor="let photo of filteredNewFeatures; let i = index">
-          <img (click)="openMovieSynopsis(photo)" [src]="photo.image" [alt]="photo.title" style="width: 160px" />
-          <h2>{{ photo.title }}</h2>
+      <div class="carousel-container">
+        <h2 class="titulo">Películas Populares</h2>
+        <div class="horizontal-scroll" #popularScroll>
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of popular"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
         </div>
 
-        <button class="btn-next" (click)="nextPhoto()">
-          <ion-icon
-            style="font-size: large"
-            name="arrow-forward-outline"
-          ></ion-icon>
-        </button>
+        <ion-button
+          class="carousel-button carousel-button-prev"
+          (click)="scrollLeft(popularScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          class="carousel-button carousel-button-next"
+          (click)="scrollRight(popularScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="carousel-container">
+        <h2 class="titulo">Estrenos</h2>
+        <div class="horizontal-scroll" #estrenoScroll>
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of estreno"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
+        </div>
+
+        <ion-button
+          class="carousel-button carousel-button-prev"
+          (click)="scrollLeft(estrenoScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          class="carousel-button carousel-button-next"
+          (click)="scrollRight(estrenoScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="carousel-container">
+        <h2 class="titulo">Las mas valoradas</h2>
+        <div class="horizontal-scroll" #valoradasScroll>
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of mejorValoradas"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
+        </div>
+
+        <ion-button
+          class="carousel-button carousel-button-prev"
+          (click)="scrollLeft(valoradasScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          class="carousel-button carousel-button-next"
+          (click)="scrollRight(valoradasScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="carousel-container">
+        <h2 class="titulo">Anime</h2>
+        <div class="horizontal-scroll" #animeScroll>
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of popularAnime"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
+        </div>
+
+        <ion-button
+          class="carousel-button carousel-button-prev"
+          (click)="scrollLeft(animeScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          class="carousel-button carousel-button-next"
+          (click)="scrollRight(animeScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="carousel-container">
+        <h2 class="titulo">Tendecias</h2>
+        <div class="horizontal-scroll" #tendenciaScroll>
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of tendencia"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
+        </div>
+
+        <ion-button
+          class="carousel-button carousel-button-prev"
+          (click)="scrollLeft(tendenciaScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          class="carousel-button carousel-button-next"
+          (click)="scrollRight(tendenciaScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="carousel-container">
+        <h2 class="titulo">Colombia</h2>
+        <div class="horizontal-scroll" #colombiaScroll>
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of colombianas"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
+        </div>
+
+        <ion-button
+          class="carousel-button carousel-button-prev"
+          (click)="scrollLeft(colombiaScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          class="carousel-button carousel-button-next"
+          (click)="scrollRight(colombiaScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="carousel-container">
+        <h2 class="titulo">Comedia</h2>
+        <div class="horizontal-scroll" #comediaScroll>
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of comedia"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
+        </div>
+
+        <ion-button
+          class="carousel-button carousel-button-prev"
+          (click)="scrollLeft(comediaScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          class="carousel-button carousel-button-next"
+          (click)="scrollRight(comediaScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="carousel-container">
+        <h2 class="titulo">Suspenso</h2>
+        <div class="horizontal-scroll" #suspensoScroll>
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of suspenso"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
+        </div>
+
+        <ion-button
+          class="carousel-button carousel-button-prev"
+          (click)="scrollLeft(suspensoScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          class="carousel-button carousel-button-next"
+          (click)="scrollRight(suspensoScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="carousel-container">
+        <h2 class="titulo">Terror</h2>
+        <div class="horizontal-scroll" #terrorScroll>
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of terror"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
+        </div>
+
+        <ion-button
+          class="carousel-button carousel-button-prev"
+          (click)="scrollLeft(terrorScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          class="carousel-button carousel-button-next"
+          (click)="scrollRight(terrorScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="carousel-container">
+        <h2 class="titulo">Romance</h2>
+        <div class="horizontal-scroll" #romanceScroll>
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of romance"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
+        </div>
+
+        <ion-button
+          class="carousel-button carousel-button-prev"
+          (click)="scrollLeft(romanceScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          class="carousel-button carousel-button-next"
+          (click)="scrollRight(romanceScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="carousel-container">
+        <h2 class="titulo">Accion</h2>
+        <div class="horizontal-scroll" #accionScroll>
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of accion"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
+        </div>
+
+        <ion-button
+          class="carousel-button carousel-button-prev"
+          (click)="scrollLeft(accionScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          class="carousel-button carousel-button-next"
+          (click)="scrollRight(accionScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="carousel-container">
+        <h2 class="titulo">Proximamente</h2>
+        <div class="horizontal-scroll" #proximoScroll>
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of proximamente"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
+        </div>
+
+        <ion-button
+          class="carousel-button carousel-button-prev"
+          (click)="scrollLeft(proximoScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          class="carousel-button carousel-button-next"
+          (click)="scrollRight(proximoScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
       </div>
     </div>
   </div>

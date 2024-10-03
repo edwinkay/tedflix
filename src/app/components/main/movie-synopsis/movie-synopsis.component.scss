@@ -1,9 +1,39 @@
+.movie-detail-content {
+  padding: 16px;
+  background-color: #f9f9f9;
+}
+
+.movie-poster-container {
+  height: 60%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
 .movie-poster {
-  width: 100%;
-  height: auto;
+  max-width: 100%;
   border-radius: 8px;
 }
 
-ion-content {
-  padding: 16px;
+.movie-info {
+  text-align: center;
+}
+
+.movie-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.movie-release-date,
+.movie-rating {
+  font-size: 14px;
+  color: #666;
+  margin: 4px 0;
+}
+
+h3 {
+  font-size: 20px;
+  margin-top: 16px;
+  margin-bottom: 8px;
 }

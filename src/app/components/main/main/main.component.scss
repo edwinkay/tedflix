@@ -1,121 +1,20 @@
-
-@media screen and (max-width: 600px){
-  .welcome-container {
-    display: none;
-  }
-  .viewer-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+.mobile{
+  display: none;
 }
-.netflix-logo {
-    display: none;
-}
-.logo-mobile {
+.welcome-container{
   display: block;
-    font-weight: bold;
-    color: #e50914;
-    font-size: 3rem;
-    position: relative;
-    bottom: 9px;
 }
-.hide {
-  display: none;
-}
-.notification{
-  display: none;
-}
-header {
-    background-color: rgba(0, 0, 0, 0.2588235294);
-    cursor: pointer;
-    position: fixed;
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 10px;
-    z-index: 2;
-    width: -webkit-fill-available;
-}
-.navbar {
-    width: 100%;
-    display: flex;
-    padding: 10px;
-    gap: 2rem;
-    align-items: flex-start;
-}
+@media screen and (max-width: 800px){
 .mobile {
   display: block;
 }
-.container {
+.welcome-container {
+  display: none;
+}
+}
+.spinner-container {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin-top: 1rem;
-}
-
-
-}
-
-.custom-avatar img {
-  width: 120px;
-    height: 80px;
-    object-fit: cover;
-}
-
-.horizontal-scroll {
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  white-space: nowrap;
-  width: -webkit-fill-available;
-
-  /* Ocultar la barra de desplazamiento */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-}
-
-.horizontal-scroll::-webkit-scrollbar {
-  display: none; /* Chrome, Safari y Opera */
-}
-
-.horizontal-item {
-  display: inline-block;
-  margin-right: 10px;
-}
-
-.btn{
-  display:  none !important;
-  bottom: 76px;
-    position: relative;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-}
-
-
-.carousel {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  overflow: hidden;
-  width: -webkit-fill-available;
-}
-
-.carousel img {
-  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-  opacity: 1;
-}
-.btn-prev-next {
-  background: none;
-  position: absolute;
-}
-
-.btn-next {
-  position: relative;
-    bottom: 29px;
-}
-
-.icon-prev{
-  position: relative;
-    bottom: 29px;
-    font-size: large;
-    background-color: gray;
+  height: 100vh;
 }

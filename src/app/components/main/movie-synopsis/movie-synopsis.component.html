@@ -9,9 +9,21 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <img [src]="movie.image" alt="{{movie.title}}" class="movie-poster"/>
-  <h2>{{ movie.title }}</h2>
-  <p>{{ movie.synopsis }}</p>
+<ion-content class="movie-detail-content">
+  <div class="movie-poster-container">
+    <img
+      [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+      alt="{{ movie.title }}"
+      class="movie-poster"
+    />
+  </div>
+
+  <div class="movie-info">
+    <h2 class="movie-title">{{ movie.title }}</h2>
+    <p class="movie-release-date">Fecha de lanzamiento: {{ movie.release_date }}</p>
+    <p class="movie-rating">Calificación: {{ movie.vote_average }} / 10</p>
+    <h3>Sinopsis</h3>
+    <p>{{ movie.overview }}</p>
+  </div>
 </ion-content>
 

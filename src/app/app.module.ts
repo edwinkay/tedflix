@@ -21,6 +21,7 @@ import { environment } from 'src/environments/environment';
 import { MovieSynopsisComponent } from './components/main/movie-synopsis/movie-synopsis.component';
 import { MobileMainComponent } from './components/main/mobile-main/mobile-main.component';
 import { DesktopMainComponent } from './components/main/desktop-main/desktop-main.component';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +33,7 @@ import { DesktopMainComponent } from './components/main/desktop-main/desktop-mai
     MainComponent,
     MovieSynopsisComponent,
     MobileMainComponent,
-    DesktopMainComponent
+    DesktopMainComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,6 +41,7 @@ import { DesktopMainComponent } from './components/main/desktop-main/desktop-mai
     ReactiveFormsModule,
     BrowserAnimationsModule,
     HammerModule,
+    HttpClientModule,
     IonicModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebase),
     AppRoutingModule,

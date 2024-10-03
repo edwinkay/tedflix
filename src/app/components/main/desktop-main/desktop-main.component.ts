@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { MenuController, ModalController } from '@ionic/angular';
-import { MoviesService } from 'src/app/services/movies.service';
 import { PerfilService } from 'src/app/services/perfil.service';
 import { MovieSynopsisComponent } from '../movie-synopsis/movie-synopsis.component';
+import { TmdbService } from 'src/app/services/tmdb.service';
 
 @Component({
   selector: 'app-desktop-main',
@@ -13,169 +13,219 @@ import { MovieSynopsisComponent } from '../movie-synopsis/movie-synopsis.compone
 })
 export class DesktopMainComponent implements OnInit {
   @ViewChild('menu') menu: any;
-  presentingElement: any = null;
-  seleccion: any;
 
-  users: any[] = [];
-  categorias: any[] = [];
-  newFeatures: any[] = [];
-  tendencias: any[] = [];
-  filteredNewFeatures: any[] = [];
-  filteredNewFeaturesm: any[] = [];
-  filteredTendencias: any[] = [];
-  filteredTendenciasm: any[] = [];
+  presentingElement: any = null;
+  seleccion2: any;
+  storage2: any;
 
   selectedMovie: any;
+  popular: any[] = [];
+  estreno: any[] = [];
+  proximamente: any[] = [];
+  mejorValoradas: any[] = [];
+  tendencia: any[] = [];
+  genero: any[] = [];
+  popularAnime: any[] = [];
+  comedia: any[] = [];
+  suspenso: any[] = [];
+  terror: any[] = [];
+  series: any[] = [];
+  romance: any[] = [];
+  accion: any[] = [];
+  colombianas: any[] = [];
 
-  slideOpts: any;
   busqueda = false;
-
-  searchTerm: string = '';
-  filteredMovies: any[] = [];
-
-  displayedPhotos: any[] = [];
-  currentIndex: number = 0;
 
   constructor(
     private _dataPerfil: PerfilService,
-    private _movies: MoviesService,
     private menuCtrl: MenuController,
     private router: Router,
     private modalCtrl: ModalController,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private tmdbService: TmdbService
   ) {}
 
   ngOnInit() {
+    const storedData = localStorage.getItem('seleccion2');
+    if (storedData) {
+      this.storage2 = JSON.parse(storedData);
+    }
     this._dataPerfil.seleccion$.subscribe((data) => {
-      this.seleccion = data;
-      this.loadMovies();
+      this.seleccion2 = data;
+      localStorage.setItem('seleccion2', JSON.stringify(data));
+    });
+
+
+
+    this.loadPopularMovies();
+    this.loadMostPopularMovieDetails();
+    this.loadEstreno();
+    this.loadValoradas();
+    this.loadTendencia();
+    this.loadAnime();
+    this.loadColombia();
+    this.loadComedia();
+    this.loadSuspenso();
+    this.loadTerror();
+    this.loadRomance();
+    this.loadAccion();
+    this.loadProximo();
+  }
+  loadMostPopularMovieDetails() {
+    this.tmdbService.getMostPopularMovie().subscribe(
+      (popularMovie) => {
+        const movieId = popularMovie.id;
+        this.tmdbService.getMovieDetails(movieId).subscribe((movieDetails) => {
+          this.selectedMovie = movieDetails;
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  loadPopularMovies() {
+    this.tmdbService.getPopularMovies().subscribe((response) => {
+      this.popular = response.results;
     });
   }
+  loadEstreno() {
+    this.tmdbService.getPeliculasEstreno().subscribe((response) => {
+      this.estreno = response.results;
+    });
+  }
+  loadValoradas() {
+    this.tmdbService.getMejorValoradas().subscribe((response) => {
+      this.mejorValoradas = response.results;
+    });
+  }
+  loadTendencia() {
+    this.tmdbService.getTendencia().subscribe((response) => {
+      this.tendencia = response.results;
+    });
+  }
+  loadAnime() {
+    this.tmdbService.getPopularAnime().subscribe((response) => {
+      this.popularAnime = response.results;
+    });
+  }
+  loadColombia() {
+    this.tmdbService.getPopularColombianMovies().subscribe((response) => {
+      this.colombianas = response.results;
+    });
+  }
+  loadComedia() {
+    this.tmdbService.getPopularComedyMovies().subscribe((response) => {
+      this.comedia = response.results;
+    });
+  }
+  loadSuspenso() {
+    this.tmdbService.getPopularSuspenseMovies().subscribe((response) => {
+      this.suspenso = response.results;
+    });
+  }
+  loadTerror() {
+    this.tmdbService.getPopularHorrorMovies().subscribe((response) => {
+      this.terror = response.results;
+    });
+  }
+  loadRomance() {
+    this.tmdbService.getPopularRomanceMovies().subscribe((response) => {
+      this.romance = response.results;
+    });
+  }
+  loadAccion() {
+    this.tmdbService.getPopularActionMovies().subscribe((response) => {
+      this.accion = response.results;
+    });
+  }
+  loadProximo() {
+    this.tmdbService.getProximamente().subscribe((response) => {
+      this.proximamente = response.results;
+    });
+  }
+
+  searchMovies(query: any) {
+    if (!query || query.trim() === '') {
+      this.loadPopularMovies();
+      this.loadEstreno();
+      this.loadValoradas();
+      this.loadTendencia();
+      this.loadAnime();
+      this.loadColombia();
+      this.loadComedia();
+      this.loadSuspenso();
+      this.loadTerror();
+      this.loadRomance();
+      this.loadAccion();
+      this.loadProximo();
+    } else {
+      this.tmdbService.searchMovies(query).subscribe((response) => {
+        this.popular = response.results;
+      });
+
+      this.tmdbService.searchEstrenos(query).subscribe((response) => {
+        this.estreno = response.results;
+      });
+
+      this.tmdbService.searchMejorValoradas(query).subscribe((response) => {
+        this.mejorValoradas = response.results;
+      });
+
+      this.tmdbService.searchTendencia(query).subscribe((response) => {
+        this.tendencia = response.results;
+      });
+
+      this.tmdbService.searchAnime(query).subscribe((response) => {
+        this.popularAnime = response.results;
+      });
+
+      this.tmdbService.searchColombianas(query).subscribe((response) => {
+        this.colombianas = response.results;
+      });
+
+      this.tmdbService.searchComedia(query).subscribe((response) => {
+        this.comedia = response.results;
+      });
+
+      this.tmdbService.searchSuspenso(query).subscribe((response) => {
+        this.suspenso = response.results;
+      });
+
+      this.tmdbService.searchTerror(query).subscribe((response) => {
+        this.terror = response.results;
+      });
+
+      this.tmdbService.searchRomance(query).subscribe((response) => {
+        this.romance = response.results;
+      });
+
+      this.tmdbService.searchAccion(query).subscribe((response) => {
+        this.accion = response.results;
+      });
+
+      this.tmdbService.searchProximamente(query).subscribe((response) => {
+        this.proximamente = response.results;
+      });
+    }
+  }
+
   scan() {
     this.busqueda = !this.busqueda;
   }
-
-  filterMovies() {
-    if (this.searchTerm) {
-      const searchTermLower = this.searchTerm.toLowerCase();
-
-      // Filtrar Nuevos lanzamientos
-      this.filteredNewFeaturesm = this.newFeatures.filter((movie) =>
-        movie.title.toLowerCase().includes(searchTermLower)
-      );
-
-      // Filtrar Tendencias
-      this.filteredTendenciasm = this.tendencias.filter((movie) =>
-        movie.title.toLowerCase().includes(searchTermLower)
-      );
-    } else {
-      // Si no hay término de búsqueda, mostrar todas las películas
-      this.filteredNewFeaturesm = [...this.newFeatures];
-      this.filteredTendenciasm = [...this.tendencias];
-    }
-  }
-  filterMovies2() {
-    if (this.searchTerm) {
-      const searchTermLower = this.searchTerm.toLowerCase();
-
-      // Filtrar Nuevos lanzamientos
-      this.filteredNewFeatures = this.newFeatures.filter((movie) =>
-        movie.title.toLowerCase().includes(searchTermLower)
-      );
-
-      // Filtrar Tendencias
-      this.filteredTendencias = this.tendencias.filter((movie) =>
-        movie.title.toLowerCase().includes(searchTermLower)
-      );
-    } else {
-      // Si no hay término de búsqueda, mostrar solo las primeras 7 películas
-      this.filteredNewFeatures = this.newFeatures.slice(0, 7);
-      this.filteredTendencias = this.tendencias.slice(0, 7);
-    }
+  scrollLeft(scroll: any) {
+    scroll.scrollBy({ left: -250, behavior: 'smooth' });
   }
 
-  loadMovies() {
-    this._movies.getMovies().subscribe((mov) => {
-      this.categorias = mov;
-      const nl = mov[0].categorias['Nuevos lanzamientos'].movies;
-      this.newFeatures = nl;
-      const td = mov[0].categorias['tendencias'].movies;
-      this.tendencias = td;
+  scrollRight(scroll: any) {
+    const scrollAmount = 250;
 
-      this.filteredNewFeatures = nl.slice(0, 7);
-      this.filteredNewFeaturesm = nl;
-      this.filteredTendencias = td.slice(0, 7);
-      this.filteredTendenciasm = td;
-
-      this.currentIndex = 0;
-    });
-  }
-
-  nextPhoto() {
-    if (this.newFeatures.length > 7) {
-      this.currentIndex = (this.currentIndex + 1) % this.newFeatures.length;
-      this.filteredNewFeatures = this.newFeatures.slice(
-        this.currentIndex,
-        this.currentIndex + 7
-      );
-
-      // Si llegamos al final de la lista, regresamos al inicio
-      if (this.filteredNewFeatures.length < 7) {
-        this.filteredNewFeatures = this.filteredNewFeatures.concat(
-          this.newFeatures.slice(0, 7 - this.filteredNewFeatures.length)
-        );
-      }
-    }
-  }
-
-  prevPhoto() {
-    if (this.newFeatures.length > 7) {
-      this.currentIndex =
-        (this.currentIndex - 1 + this.newFeatures.length) %
-        this.newFeatures.length;
-      this.filteredNewFeatures = this.newFeatures.slice(
-        this.currentIndex,
-        this.currentIndex + 7
-      );
-
-      // Si llegamos al principio de la lista, volvemos al final
-      if (this.filteredNewFeatures.length < 7) {
-        this.filteredNewFeatures = this.newFeatures.slice(-7);
-      }
-    }
-  }
-
-  nextPhotoTendencias() {
-    if (this.tendencias.length > 7) {
-      this.currentIndex = (this.currentIndex + 1) % this.tendencias.length;
-      this.filteredTendencias = this.tendencias.slice(
-        this.currentIndex,
-        this.currentIndex + 7
-      );
-
-      // Si llegamos al final de la lista, regresamos al inicio
-      if (this.filteredTendencias.length < 7) {
-        this.filteredTendencias = this.filteredTendencias.concat(
-          this.tendencias.slice(0, 7 - this.filteredTendencias.length)
-        );
-      }
-    }
-  }
-
-  prevPhotoTendencias() {
-    if (this.tendencias.length > 7) {
-      this.currentIndex =
-        (this.currentIndex - 1 + this.tendencias.length) %
-        this.tendencias.length;
-      this.filteredTendencias = this.tendencias.slice(
-        this.currentIndex,
-        this.currentIndex + 7
-      );
-
-      // Si llegamos al principio de la lista, volvemos al final
-      if (this.filteredTendencias.length < 7) {
-        this.filteredTendencias = this.tendencias.slice(-7);
-      }
+    scroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    if (scroll.scrollLeft + scroll.clientWidth >= scroll.scrollWidth) {
+      setTimeout(() => {
+        scroll.scrollTo({ left: 0, behavior: 'smooth' });
+      }, 300);
     }
   }
 

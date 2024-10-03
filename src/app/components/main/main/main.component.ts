@@ -2,9 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { MenuController, ModalController } from '@ionic/angular';
-import { MoviesService } from 'src/app/services/movies.service';
 import { PerfilService } from 'src/app/services/perfil.service';
 import { MovieSynopsisComponent } from '../movie-synopsis/movie-synopsis.component';
+import { TmdbService } from 'src/app/services/tmdb.service';
 
 @Component({
   selector: 'app-main',
@@ -15,169 +15,267 @@ export class MainComponent implements OnInit {
   @ViewChild('menu') menu: any;
   presentingElement: any = null;
   seleccion: any;
+  storage: any
 
-  users: any[] = [];
-  categorias: any[] = [];
-  newFeatures: any[] = [];
-  tendencias: any[] = [];
-  filteredNewFeatures: any[] = [];
-  filteredNewFeaturesm: any[] = [];
-  filteredTendencias: any[] = [];
-  filteredTendenciasm: any[] = [];
-
+  isLoading = true;
   selectedMovie: any;
-
-  slideOpts: any;
-  busqueda = false;
-
-  searchTerm: string = '';
-  filteredMovies: any[] = [];
-
-  displayedPhotos: any[] = [];
-  currentIndex: number = 0;
+  popular: any[] = [];
+  estreno: any[] = [];
+  proximamente: any[] = [];
+  mejorValoradas: any[] = [];
+  tendencia: any[] = [];
+  genero: any[] = [];
+  popularAnime: any[] = [];
+  comedia: any[] = [];
+  suspenso: any[] = [];
+  terror: any[] = [];
+  series: any[] = [];
+  romance: any[] = [];
+  accion: any[] = [];
+  colombianas: any[] = [];
 
   constructor(
     private _dataPerfil: PerfilService,
-    private _movies: MoviesService,
     private menuCtrl: MenuController,
     private router: Router,
     private modalCtrl: ModalController,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private tmdbService: TmdbService
   ) {}
 
   ngOnInit() {
+    const storedData = localStorage.getItem('seleccion');
+    if (storedData) {
+      this.storage = JSON.parse(storedData);
+    }
     this._dataPerfil.seleccion$.subscribe((data) => {
       this.seleccion = data;
-      this.loadMovies();
+      localStorage.setItem('seleccion', JSON.stringify(data));
+    });
+    this.loadAllData();
+  }
+
+  loadAllData() {
+    Promise.all([
+      this.loadMostPopularMovieDetails(),
+      this.loadPopularMovies(),
+      this.loadEstreno(),
+      this.loadValoradas(),
+      this.loadTendencia(),
+      this.loadAnime(),
+      this.loadColombia(),
+      this.loadComedia(),
+      this.loadSuspenso(),
+      this.loadTerror(),
+      this.loadRomance(),
+      this.loadAccion(),
+      this.loadProximo(),
+    ]).then(() => {
+      this.isLoading = false;
     });
   }
-  scan() {
-    this.busqueda = !this.busqueda;
-  }
-
-  filterMovies() {
-    if (this.searchTerm) {
-      const searchTermLower = this.searchTerm.toLowerCase();
-
-      // Filtrar Nuevos lanzamientos
-      this.filteredNewFeaturesm = this.newFeatures.filter((movie) =>
-        movie.title.toLowerCase().includes(searchTermLower)
+  loadMostPopularMovieDetails(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.tmdbService.getMostPopularMovie().subscribe(
+        (popularMovie) => {
+          const movieId = popularMovie.id;
+          this.tmdbService.getMovieDetails(movieId).subscribe(
+            (movieDetails) => {
+              this.selectedMovie = movieDetails;
+              resolve();
+            },
+            (error) => {
+              console.error('Error loading movie details', error);
+              reject(error);
+            }
+          );
+        },
+        (error) => {
+          console.error('Error loading most popular movie', error);
+          reject(error);
+        }
       );
-
-      // Filtrar Tendencias
-      this.filteredTendenciasm = this.tendencias.filter((movie) =>
-        movie.title.toLowerCase().includes(searchTermLower)
-      );
-    } else {
-      // Si no hay término de búsqueda, mostrar todas las películas
-      this.filteredNewFeaturesm = [...this.newFeatures];
-      this.filteredTendenciasm = [...this.tendencias];
-    }
-  }
-  filterMovies2() {
-    if (this.searchTerm) {
-      const searchTermLower = this.searchTerm.toLowerCase();
-
-      // Filtrar Nuevos lanzamientos
-      this.filteredNewFeatures = this.newFeatures.filter((movie) =>
-        movie.title.toLowerCase().includes(searchTermLower)
-      );
-
-      // Filtrar Tendencias
-      this.filteredTendencias = this.tendencias.filter((movie) =>
-        movie.title.toLowerCase().includes(searchTermLower)
-      );
-    } else {
-      // Si no hay término de búsqueda, mostrar solo las primeras 7 películas
-      this.filteredNewFeatures = this.newFeatures.slice(0, 7);
-      this.filteredTendencias = this.tendencias.slice(0, 7);
-    }
-  }
-
-  loadMovies() {
-    this._movies.getMovies().subscribe((mov) => {
-      this.categorias = mov;
-      const nl = mov[0].categorias['Nuevos lanzamientos'].movies;
-      this.newFeatures = nl;
-      const td = mov[0].categorias['tendencias'].movies;
-      this.tendencias = td;
-
-
-      this.filteredNewFeatures = nl.slice(0, 7);
-      this.filteredNewFeaturesm = nl
-      this.filteredTendencias = td.slice(0, 7);
-      this.filteredTendenciasm = td
-
-      this.currentIndex = 0;
     });
   }
 
-  nextPhoto() {
-    if (this.newFeatures.length > 7) {
-      this.currentIndex = (this.currentIndex + 1) % this.newFeatures.length;
-      this.filteredNewFeatures = this.newFeatures.slice(
-        this.currentIndex,
-        this.currentIndex + 7
+  loadPopularMovies(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.tmdbService.getPopularMovies().subscribe(
+        (response) => {
+          this.popular = response.results;
+          resolve();
+        },
+        (error) => {
+          console.error('Error loading popular movies', error);
+          reject(error);
+        }
       );
-
-      // Si llegamos al final de la lista, regresamos al inicio
-      if (this.filteredNewFeatures.length < 7) {
-        this.filteredNewFeatures = this.filteredNewFeatures.concat(
-          this.newFeatures.slice(0, 7 - this.filteredNewFeatures.length)
-        );
-      }
-    }
+    });
   }
 
-  prevPhoto() {
-    if (this.newFeatures.length > 7) {
-      this.currentIndex =
-        (this.currentIndex - 1 + this.newFeatures.length) %
-        this.newFeatures.length;
-      this.filteredNewFeatures = this.newFeatures.slice(
-        this.currentIndex,
-        this.currentIndex + 7
+  loadEstreno(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.tmdbService.getPeliculasEstreno().subscribe(
+        (response) => {
+          this.estreno = response.results;
+          resolve();
+        },
+        (error) => {
+          console.error('Error loading estreno movies', error);
+          reject(error);
+        }
       );
-
-      // Si llegamos al principio de la lista, volvemos al final
-      if (this.filteredNewFeatures.length < 7) {
-        this.filteredNewFeatures = this.newFeatures.slice(-7);
-      }
-    }
+    });
   }
 
-  nextPhotoTendencias() {
-    if (this.tendencias.length > 7) {
-      this.currentIndex = (this.currentIndex + 1) % this.tendencias.length;
-      this.filteredTendencias = this.tendencias.slice(
-        this.currentIndex,
-        this.currentIndex + 7
+  loadValoradas(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.tmdbService.getMejorValoradas().subscribe(
+        (response) => {
+          this.mejorValoradas = response.results;
+          resolve();
+        },
+        (error) => {
+          console.error('Error loading best rated movies', error);
+          reject(error);
+        }
       );
-
-      // Si llegamos al final de la lista, regresamos al inicio
-      if (this.filteredTendencias.length < 7) {
-        this.filteredTendencias = this.filteredTendencias.concat(
-          this.tendencias.slice(0, 7 - this.filteredTendencias.length)
-        );
-      }
-    }
+    });
   }
 
-  prevPhotoTendencias() {
-    if (this.tendencias.length > 7) {
-      this.currentIndex =
-        (this.currentIndex - 1 + this.tendencias.length) %
-        this.tendencias.length;
-      this.filteredTendencias = this.tendencias.slice(
-        this.currentIndex,
-        this.currentIndex + 7
+  loadTendencia(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.tmdbService.getTendencia().subscribe(
+        (response) => {
+          this.tendencia = response.results;
+          resolve();
+        },
+        (error) => {
+          console.error('Error loading trending movies', error);
+          reject(error);
+        }
       );
+    });
+  }
 
-      // Si llegamos al principio de la lista, volvemos al final
-      if (this.filteredTendencias.length < 7) {
-        this.filteredTendencias = this.tendencias.slice(-7);
-      }
-    }
+  loadAnime(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.tmdbService.getPopularAnime().subscribe(
+        (response) => {
+          this.popularAnime = response.results;
+          resolve();
+        },
+        (error) => {
+          console.error('Error loading popular anime', error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  loadColombia(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.tmdbService.getPopularColombianMovies().subscribe(
+        (response) => {
+          this.colombianas = response.results;
+          resolve();
+        },
+        (error) => {
+          console.error('Error loading Colombian movies', error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  loadComedia(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.tmdbService.getPopularComedyMovies().subscribe(
+        (response) => {
+          this.comedia = response.results;
+          resolve();
+        },
+        (error) => {
+          console.error('Error loading comedy movies', error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  loadSuspenso(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.tmdbService.getPopularSuspenseMovies().subscribe(
+        (response) => {
+          this.suspenso = response.results;
+          resolve();
+        },
+        (error) => {
+          console.error('Error loading suspense movies', error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  loadTerror(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.tmdbService.getPopularHorrorMovies().subscribe(
+        (response) => {
+          this.terror = response.results;
+          resolve();
+        },
+        (error) => {
+          console.error('Error loading horror movies', error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  loadRomance(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.tmdbService.getPopularRomanceMovies().subscribe(
+        (response) => {
+          this.romance = response.results;
+          resolve();
+        },
+        (error) => {
+          console.error('Error loading romance movies', error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  loadAccion(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.tmdbService.getPopularActionMovies().subscribe(
+        (response) => {
+          this.accion = response.results;
+          resolve();
+        },
+        (error) => {
+          console.error('Error loading action movies', error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  loadProximo(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.tmdbService.getProximamente().subscribe(
+        (response) => {
+          this.proximamente = response.results;
+          resolve();
+        },
+        (error) => {
+          console.error('Error loading upcoming movies', error);
+          reject(error);
+        }
+      );
+    });
   }
 
   async cerrarSesion() {
