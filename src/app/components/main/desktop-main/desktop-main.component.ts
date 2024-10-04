@@ -18,6 +18,10 @@ export class DesktopMainComponent implements OnInit {
   seleccion2: any;
   storage2: any;
 
+  titulo: any = 'Genero';
+
+  view: string = 'all';
+
   selectedMovie: any;
   popular: any[] = [];
   estreno: any[] = [];
@@ -33,8 +37,40 @@ export class DesktopMainComponent implements OnInit {
   romance: any[] = [];
   accion: any[] = [];
   colombianas: any[] = [];
+  generos: any[] = [];
+
+  genres = [
+    { id: 28, name: 'Acción' },
+    { id: 35, name: 'Comedia' },
+    { id: 18, name: 'Drama' },
+    { id: 27, name: 'Terror' },
+    { id: 16, name: 'Animación' },
+    { id: 10749, name: 'Romance' },
+    { id: 80, name: 'Crimen' },
+    { id: 99, name: 'Documental' },
+    { id: 14, name: 'Fantasía' },
+    { id: 36, name: 'Historia' },
+    { id: 10402, name: 'Música' },
+    { id: 9648, name: 'Misterio' },
+    { id: 10751, name: 'Familia' },
+    { id: 878, name: 'Ciencia Ficción' },
+    { id: 10770, name: 'Película de TV' },
+    { id: 53, name: 'Suspenso' },
+    { id: 37, name: 'Western' },
+    { id: 12, name: 'Aventura' },
+    { id: 10752, name: 'Bélica' },
+    { id: 10762, name: 'Niños' },
+    { id: 10763, name: 'Noticias' },
+    { id: 10764, name: 'Reality' },
+    { id: 10765, name: 'Fantasía y Ciencia Ficción' },
+    { id: 10766, name: 'Telenovela' },
+    { id: 10767, name: 'Talk Show' },
+    { id: 10768, name: 'Guerra y Política' },
+  ];
 
   busqueda = false;
+  ver = false;
+  hid = true
 
   constructor(
     private _dataPerfil: PerfilService,
@@ -55,8 +91,6 @@ export class DesktopMainComponent implements OnInit {
       localStorage.setItem('seleccion2', JSON.stringify(data));
     });
 
-
-
     this.loadPopularMovies();
     this.loadMostPopularMovieDetails();
     this.loadEstreno();
@@ -71,6 +105,29 @@ export class DesktopMainComponent implements OnInit {
     this.loadAccion();
     this.loadProximo();
   }
+  showSeries() {
+    this.hid = false
+    this.ver = false;
+    this.view = 'series';
+  }
+
+  showMovies() {
+    this.hid = false;
+    this.ver = false;
+    this.view = 'movies';
+  }
+  showTendencia() {
+    this.hid = false;
+    this.ver = false;
+    this.view = 'tendencia';
+  }
+
+  showAll() {
+    this.hid = true;
+    this.ver = false;
+    this.view = 'all';
+  }
+
   loadMostPopularMovieDetails() {
     this.tmdbService.getMostPopularMovie().subscribe(
       (popularMovie) => {
@@ -83,6 +140,18 @@ export class DesktopMainComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+  filterByGenre(event: any) {
+    const id = event.detail.value;
+    const name = this.genres.find((name) => name.id === id);
+    if (name) {
+      this.ver = true;
+      this.hid = false;
+      this.titulo = name.name;
+    }
+    this.tmdbService.getPorGenero(id).subscribe((response) => {
+      this.generos = response.results;
+    });
   }
 
   loadPopularMovies() {
@@ -148,6 +217,7 @@ export class DesktopMainComponent implements OnInit {
 
   searchMovies(query: any) {
     if (!query || query.trim() === '') {
+      this.hid = true;
       this.loadPopularMovies();
       this.loadEstreno();
       this.loadValoradas();
@@ -161,6 +231,7 @@ export class DesktopMainComponent implements OnInit {
       this.loadAccion();
       this.loadProximo();
     } else {
+      this.hid = false;
       this.tmdbService.searchMovies(query).subscribe((response) => {
         this.popular = response.results;
       });

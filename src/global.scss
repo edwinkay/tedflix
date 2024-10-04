@@ -45,3 +45,6 @@
   border: 2px solid white !important;
 }
 
+ion-select::part(placeholder) {
+  opacity: 1 !important;
+}

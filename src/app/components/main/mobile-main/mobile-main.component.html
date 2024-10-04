@@ -13,11 +13,21 @@
             "
           >
             <div class="navbar">
-              <a>Inicio</a>
-              <a class="hide">Series</a>
-              <a>Películas</a>
-              <a class="hide">Novedades</a>
-              <a>Mi Lista</a>
+              <a (click)="showSeries()">Series</a>
+              <a (click)="showMovies()">Películas</a>
+              <ion-select
+                style="font-weight: 600;"
+                placeholder="Género"
+                interface="popover"
+                (ionChange)="filterByGenre($event)"
+              >
+                <ion-select-option
+                  *ngFor="let genre of genres"
+                  [value]="genre.id"
+                >
+                  {{ genre.name }}
+                </ion-select-option>
+              </ion-select>
             </div>
             <ion-buttons slot="end">
               <ion-menu-button></ion-menu-button>
@@ -32,7 +42,30 @@
     </ion-header>
 
     <ion-content>
-      <div class="carousel-container">
+      <div
+        *ngIf="ver"
+        class="carousel-container"
+      >
+        <h2 class="titulo">{{titulo || 'Genero'}}</h2>
+        <div class="horizontal-scroll">
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of generos"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!ver">
+        <div
+        *ngIf="view === 'all' || view === 'movies'"
+        class="carousel-container"
+      >
         <h2 class="titulo">Películas Populares</h2>
         <div class="horizontal-scroll">
           <div
@@ -48,7 +81,10 @@
           </div>
         </div>
       </div>
-      <div class="carousel-container">
+      <div
+        *ngIf="view === 'all' || view === 'movies'"
+        class="carousel-container"
+      >
         <h2 class="titulo">Estrenos</h2>
         <div class="horizontal-scroll">
           <div
@@ -64,7 +100,7 @@
           </div>
         </div>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all'" class="carousel-container">
         <h2 class="titulo">Las mas valoradas</h2>
         <div class="horizontal-scroll">
           <div
@@ -80,7 +116,7 @@
           </div>
         </div>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all'" class="carousel-container">
         <h2 class="titulo">Tendencia</h2>
         <div class="horizontal-scroll">
           <div
@@ -96,7 +132,10 @@
           </div>
         </div>
       </div>
-      <div class="carousel-container">
+      <div
+        *ngIf="view === 'all' || view === 'series'"
+        class="carousel-container"
+      >
         <h2 class="titulo">Anime</h2>
         <div class="horizontal-scroll">
           <div
@@ -112,7 +151,7 @@
           </div>
         </div>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all'" class="carousel-container">
         <h2 class="titulo">Colombia</h2>
         <div class="horizontal-scroll">
           <div
@@ -128,7 +167,7 @@
           </div>
         </div>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all'" class="carousel-container">
         <h2 class="titulo">Comedia</h2>
         <div class="horizontal-scroll">
           <div
@@ -144,7 +183,10 @@
           </div>
         </div>
       </div>
-      <div class="carousel-container">
+      <div
+        *ngIf="view === 'all' || view === 'movies'"
+        class="carousel-container"
+      >
         <h2 class="titulo">Suspenso</h2>
         <div class="horizontal-scroll">
           <div
@@ -160,7 +202,7 @@
           </div>
         </div>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all'" class="carousel-container">
         <h2 class="titulo">Terror</h2>
         <div class="horizontal-scroll">
           <div
@@ -176,7 +218,10 @@
           </div>
         </div>
       </div>
-      <div class="carousel-container">
+      <div
+        *ngIf="view === 'all' || view === 'series'"
+        class="carousel-container"
+      >
         <h2 class="titulo">Romance</h2>
         <div class="horizontal-scroll">
           <div
@@ -192,7 +237,26 @@
           </div>
         </div>
       </div>
-      <div class="carousel-container">
+      <div
+        *ngIf="view === 'all' || view === 'series'"
+        class="carousel-container"
+      >
+        <h2 class="titulo">Series</h2>
+        <div class="horizontal-scroll">
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of series"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="view === 'all'" class="carousel-container">
         <h2 class="titulo">Accion</h2>
         <div class="horizontal-scroll">
           <div
@@ -208,7 +272,7 @@
           </div>
         </div>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all'" class="carousel-container">
         <h2 class="titulo">Proximamente</h2>
         <div class="horizontal-scroll">
           <div
@@ -224,12 +288,13 @@
           </div>
         </div>
       </div>
+      </div>
     </ion-content>
 
     <ion-tab-bar slot="bottom">
       <ion-tab-button>
         <ion-icon name="home-outline"></ion-icon>
-        <ion-label>Inicio</ion-label>
+        <ion-label (click)="showAll()">Inicio</ion-label>
       </ion-tab-button>
 
       <ion-tab-button>

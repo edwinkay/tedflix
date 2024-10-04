@@ -27,9 +27,22 @@ export class MobileMainComponent implements OnInit {
   series: any[] = [];
   romance: any[] = [];
   accion: any[] = [];
+  generos: any[] = [];
   colombianas: any[] = [];
 
   busqueda = false;
+  titulo: any = 'Genero';
+
+  view: string = 'all';
+  ver = false
+
+  genres = [
+    { id: 28, name: 'Acción' },
+    { id: 35, name: 'Comedia' },
+    { id: 18, name: 'Drama' },
+    { id: 27, name: 'Terror' },
+    { id: 16, name: 'Animación' },
+  ];
 
   constructor(
     private menuCtrl: MenuController,
@@ -52,6 +65,34 @@ export class MobileMainComponent implements OnInit {
     this.loadRomance();
     this.loadAccion();
     this.loadProximo();
+    this.loadSeries();
+  }
+
+  showSeries() {
+    this.ver = false;
+    this.view = 'series';
+  }
+
+  showMovies() {
+    this.ver = false;
+    this.view = 'movies';
+  }
+
+  showAll() {
+    this.ver = false
+    this.view = 'all';
+  }
+
+  filterByGenre(event: any) {
+    const id = event.detail.value;
+    const name = this.genres.find((name) => name.id === id);
+    if (name) {
+      this.ver = true
+      this.titulo = name.name;
+    }
+    this.tmdbService.getPorGenero(id).subscribe((response) => {
+      this.generos = response.results;
+    });
   }
 
   loadPopularMovies() {
@@ -109,6 +150,11 @@ export class MobileMainComponent implements OnInit {
       this.accion = response.results;
     });
   }
+  loadSeries() {
+    this.tmdbService.getPopularSeries().subscribe((response) => {
+      this.series = response.results;
+    });
+  }
   loadProximo() {
     this.tmdbService.getProximamente().subscribe((response) => {
       this.proximamente = response.results;
@@ -129,6 +175,7 @@ export class MobileMainComponent implements OnInit {
       this.loadRomance();
       this.loadAccion();
       this.loadProximo();
+      this.loadSeries();
     } else {
       this.tmdbService.searchMovies(query).subscribe((response) => {
         this.populares = response.results;
@@ -176,6 +223,9 @@ export class MobileMainComponent implements OnInit {
 
       this.tmdbService.searchProximamente(query).subscribe((response) => {
         this.proximamente = response.results;
+      });
+      this.tmdbService.searchSeries(query).subscribe((response) => {
+        this.series = response.results;
       });
     }
   }

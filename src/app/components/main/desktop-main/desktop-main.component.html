@@ -14,11 +14,24 @@
         <span>X</span>
       </div>
       <div class="navbar">
-        <a>Inicio</a>
-        <a class="hide">Series</a>
-        <a>Películas</a>
-        <a class="hide">Novedades</a>
-        <a>Mi Lista</a>
+        <a (click)="showAll()">Inicio</a>
+        <a (click)="showSeries()">Series</a>
+        <a (click)="showMovies()">Películas</a>
+        <a (click)="showTendencia()">Tendencias</a>
+        <ion-select
+                class="select"
+                style="font-weight: 600;"
+                placeholder="Género"
+                interface="popover"
+                (ionChange)="filterByGenre($event)"
+              >
+                <ion-select-option
+                  *ngFor="let genre of genres"
+                  [value]="genre.id"
+                >
+                  {{ genre.name }}
+                </ion-select-option>
+              </ion-select>
       </div>
       <div style="width: 55%;">
         <ion-buttons slot="end">
@@ -41,7 +54,7 @@
 
     <div  class="container" id="main-content">
       <!-- Sección del carrusel de contenido destacado -->
-      <div (click)="openMovieSynopsis(selectedMovie)" class="featured-content">
+      <div *ngIf="hid" (click)="openMovieSynopsis(selectedMovie)" class="featured-content">
         <div style="display: flex; gap: 1rem">
           <img
             style="width: 26%"
@@ -72,7 +85,39 @@
       </div>
 
       <!-- Secciones de películas (Tendencias, Nuevos lanzamientos, etc.) -->
-      <div class="carousel-container">
+      <div *ngIf="ver" class="carousel-container">
+        <h2 class="titulo">{{titulo || 'Genero'}}</h2>
+        <div class="horizontal-scroll" #popularScroll>
+          <div
+            class="horizontal-item"
+            *ngFor="let movie of generos"
+            (click)="openMovieSynopsis(movie)"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+              alt="{{ movie.title }}"
+            />
+            <h3>{{ movie.title }}</h3>
+          </div>
+        </div>
+
+        <ion-button
+          class="carousel-button carousel-button-prev"
+          (click)="scrollLeft(popularScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          class="carousel-button carousel-button-next"
+          (click)="scrollRight(popularScroll)"
+          fill="clear"
+        >
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+      <div style="width: -webkit-fill-available;" *ngIf="!ver">
+        <div *ngIf="view === 'all' || view === 'movies'" class="carousel-container">
         <h2 class="titulo">Películas Populares</h2>
         <div class="horizontal-scroll" #popularScroll>
           <div
@@ -103,7 +148,7 @@
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </ion-button>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all' || view === 'movies'" class="carousel-container">
         <h2 class="titulo">Estrenos</h2>
         <div class="horizontal-scroll" #estrenoScroll>
           <div
@@ -134,7 +179,7 @@
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </ion-button>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all' || view === 'tendencia'" class="carousel-container">
         <h2 class="titulo">Las mas valoradas</h2>
         <div class="horizontal-scroll" #valoradasScroll>
           <div
@@ -165,7 +210,7 @@
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </ion-button>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all' || view === 'series'" class="carousel-container">
         <h2 class="titulo">Anime</h2>
         <div class="horizontal-scroll" #animeScroll>
           <div
@@ -196,8 +241,8 @@
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </ion-button>
       </div>
-      <div class="carousel-container">
-        <h2 class="titulo">Tendecias</h2>
+      <div *ngIf="view === 'all' || view === 'tendencia'" class="carousel-container">
+        <h2 class="titulo">Tendencias</h2>
         <div class="horizontal-scroll" #tendenciaScroll>
           <div
             class="horizontal-item"
@@ -227,7 +272,7 @@
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </ion-button>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all'" class="carousel-container">
         <h2 class="titulo">Colombia</h2>
         <div class="horizontal-scroll" #colombiaScroll>
           <div
@@ -258,7 +303,7 @@
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </ion-button>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all'" class="carousel-container">
         <h2 class="titulo">Comedia</h2>
         <div class="horizontal-scroll" #comediaScroll>
           <div
@@ -289,7 +334,7 @@
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </ion-button>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all' || view === 'series'" class="carousel-container">
         <h2 class="titulo">Suspenso</h2>
         <div class="horizontal-scroll" #suspensoScroll>
           <div
@@ -320,7 +365,7 @@
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </ion-button>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all' || view === 'movies'" class="carousel-container">
         <h2 class="titulo">Terror</h2>
         <div class="horizontal-scroll" #terrorScroll>
           <div
@@ -351,7 +396,7 @@
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </ion-button>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all' || view === 'series'" class="carousel-container">
         <h2 class="titulo">Romance</h2>
         <div class="horizontal-scroll" #romanceScroll>
           <div
@@ -382,7 +427,7 @@
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </ion-button>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all'" class="carousel-container">
         <h2 class="titulo">Accion</h2>
         <div class="horizontal-scroll" #accionScroll>
           <div
@@ -413,7 +458,7 @@
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </ion-button>
       </div>
-      <div class="carousel-container">
+      <div *ngIf="view === 'all'" class="carousel-container">
         <h2 class="titulo">Proximamente</h2>
         <div class="horizontal-scroll" #proximoScroll>
           <div
@@ -443,6 +488,7 @@
         >
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </ion-button>
+      </div>
       </div>
     </div>
   </div>

@@ -211,7 +211,7 @@ export class TmdbService {
     );
   }
 
-    // Método para buscar películas de estreno
+  // Método para buscar películas de estreno
   searchEstrenos(query: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.apiReadToken}`,
@@ -254,7 +254,7 @@ export class TmdbService {
       'Content-Type': 'application/json;charset=utf-8',
     });
     return this.http.get(
-      `${this.apiUrl}/search/movie?query=${query}&with_genres=16&api_key=${this.apiKey}`,  // Género 16: Animación
+      `${this.apiUrl}/search/movie?query=${query}&with_genres=16&api_key=${this.apiKey}`, // Género 16: Animación
       { headers }
     );
   }
@@ -266,7 +266,7 @@ export class TmdbService {
       'Content-Type': 'application/json;charset=utf-8',
     });
     return this.http.get(
-      `${this.apiUrl}/search/movie?query=${query}&region=CO&api_key=${this.apiKey}`,  // Región CO: Colombia
+      `${this.apiUrl}/search/movie?query=${query}&region=CO&api_key=${this.apiKey}`, // Región CO: Colombia
       { headers }
     );
   }
@@ -278,7 +278,7 @@ export class TmdbService {
       'Content-Type': 'application/json;charset=utf-8',
     });
     return this.http.get(
-      `${this.apiUrl}/search/movie?query=${query}&with_genres=35&api_key=${this.apiKey}`,  // Género 35: Comedia
+      `${this.apiUrl}/search/movie?query=${query}&with_genres=35&api_key=${this.apiKey}`, // Género 35: Comedia
       { headers }
     );
   }
@@ -290,7 +290,7 @@ export class TmdbService {
       'Content-Type': 'application/json;charset=utf-8',
     });
     return this.http.get(
-      `${this.apiUrl}/search/movie?query=${query}&with_genres=53&api_key=${this.apiKey}`,  // Género 53: Suspenso
+      `${this.apiUrl}/search/movie?query=${query}&with_genres=53&api_key=${this.apiKey}`, // Género 53: Suspenso
       { headers }
     );
   }
@@ -302,7 +302,7 @@ export class TmdbService {
       'Content-Type': 'application/json;charset=utf-8',
     });
     return this.http.get(
-      `${this.apiUrl}/search/movie?query=${query}&with_genres=27&api_key=${this.apiKey}`,  // Género 27: Terror
+      `${this.apiUrl}/search/movie?query=${query}&with_genres=27&api_key=${this.apiKey}`, // Género 27: Terror
       { headers }
     );
   }
@@ -314,7 +314,7 @@ export class TmdbService {
       'Content-Type': 'application/json;charset=utf-8',
     });
     return this.http.get(
-      `${this.apiUrl}/search/movie?query=${query}&with_genres=10749&api_key=${this.apiKey}`,  // Género 10749: Romance
+      `${this.apiUrl}/search/movie?query=${query}&with_genres=10749&api_key=${this.apiKey}`, // Género 10749: Romance
       { headers }
     );
   }
@@ -326,7 +326,7 @@ export class TmdbService {
       'Content-Type': 'application/json;charset=utf-8',
     });
     return this.http.get(
-      `${this.apiUrl}/search/movie?query=${query}&with_genres=28&api_key=${this.apiKey}`,  // Género 28: Acción
+      `${this.apiUrl}/search/movie?query=${query}&with_genres=28&api_key=${this.apiKey}`, // Género 28: Acción
       { headers }
     );
   }
@@ -338,9 +338,21 @@ export class TmdbService {
       'Content-Type': 'application/json;charset=utf-8',
     });
     return this.http.get(
-      `${this.apiUrl}/search/movie?query=${query}&release_date.gte=${new Date().toISOString().split('T')[0]}&api_key=${this.apiKey}`,  // Películas con fecha de estreno futura
+      `${this.apiUrl}/search/movie?query=${query}&release_date.gte=${
+        new Date().toISOString().split('T')[0]
+      }&api_key=${this.apiKey}`, // Películas con fecha de estreno futura
       { headers }
     );
   }
+  searchSeries(query: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.apiReadToken}`,
+      'Content-Type': 'application/json;charset=utf-8',
+    });
 
+    return this.http.get(
+      `${this.apiUrl}/search/tv?query=${query}&api_key=${this.apiKey}&language=es-LA&region=CO`,
+      { headers }
+    );
+  }
 }
